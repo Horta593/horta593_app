@@ -1,60 +1,85 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:horta593app/constants/global_variables.dart';
 
 class CustomCounterWidget extends StatefulWidget {
   final int counterValue;
-  final Function(int) onValueChanged;
+  final ValueChanged<int> onValueChanged;
 
-  const CustomCounterWidget({
+  CustomCounterWidget({
     Key? key,
     required this.counterValue,
     required this.onValueChanged,
   }) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _CustomCounterWidgetState createState() => _CustomCounterWidgetState();
 }
 
 class _CustomCounterWidgetState extends State<CustomCounterWidget> {
-  void _incrementCounter() {
-    widget.onValueChanged(widget.counterValue + 1);
+  int _counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _counter = widget.counterValue;
   }
 
-  void _decrementCounter() {
-    if (widget.counterValue > 0) {
-      widget.onValueChanged(widget.counterValue - 1);
+  @override
+  void didUpdateWidget(covariant CustomCounterWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.counterValue != oldWidget.counterValue) {
+      _counter = widget.counterValue;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 120,
-      height: 60,
-      color: Colors.blue, // Replace with your desired background color
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            onPressed: _decrementCounter,
-            icon: const Icon(Icons.remove),
-            color: Colors.white, // Replace with your desired icon color
-          ),
-          Text(
-            widget.counterValue.toString(),
-            style: const TextStyle(
-              color: Colors.white, // Replace with your desired text color
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          IconButton(
-            onPressed: _incrementCounter,
-            icon: const Icon(Icons.add),
-            color: Colors.white, // Replace with your desired icon color
-          ),
-        ],
-      ),
+    return Row(
+      children: <Widget>[
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: GlobalVariables.background2,
+                minimumSize: Size(10, 30)),
+            onPressed: () {
+              setState(() {
+                if (_counter >= 1) {
+                  _counter -= 1;
+                  widget.onValueChanged(_counter);
+                }
+              });
+            },
+            child: const Text(
+              '-',
+              style: TextStyle(color: GlobalVariables.yellow),
+            )),
+        Container(
+            color: GlobalVariables.background2,
+            height: 30,
+            width: 30,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                '$_counter',
+                style:
+                    TextStyle(color: GlobalVariables.whiteletter, fontSize: 12),
+              ),
+            )),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: GlobalVariables.background2,
+                minimumSize: Size(10, 30)),
+            onPressed: () {
+              setState(() {
+                _counter += 1;
+                widget.onValueChanged(_counter);
+              });
+            },
+            child: const Text(
+              '+',
+              style: TextStyle(color: GlobalVariables.yellow),
+            )),
+      ],
     );
   }
 }

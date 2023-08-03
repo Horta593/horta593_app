@@ -18,7 +18,7 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  int c = 0;
+  int _counter = 0;
   List<Product> _listItems = [];
   TextEditingController _textController = TextEditingController();
   List<Product> _filteredItems = [];
@@ -88,22 +88,20 @@ class _MenuScreenState extends State<MenuScreen> {
                           child: NormalText(text: product.description)),
                       Container(
                         width: AppLayout.getSize(context).width * 0.9,
-                        height:
-                            0.5, // Set the desired height to control the length of the divider
-                        color: GlobalVariables
-                            .greyHorta, // Set the color of the divider line
+                        height: 0.5,
+                        color: GlobalVariables.greyHorta,
                       ),
                     ],
                   ),
                 ),
                 CustomCounterWidget(
-                  counterValue: c,
+                  counterValue: _counter,
                   onValueChanged: (newValue) {
                     setState(() {
-                      c = newValue;
+                      _counter = newValue;
                     });
                   },
-                )
+                ),
               ],
             ),
           ),
@@ -206,57 +204,62 @@ class _MenuScreenState extends State<MenuScreen> {
                         _filterItems(value);
                       },
                     )),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Row(
-                    children: const [
-                      CategoryScreen(title: 'Sandwichs'),
-                      CategoryScreen(title: 'Tortillas'),
-                      CategoryScreen(title: 'Ensaldas'),
-                      CategoryScreen(title: 'Promos'),
-                      CategoryScreen(title: 'Bebidas'),
-                    ],
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        height: 140,
-                        width: AppLayout.getSize(context).width,
-                        child: PageView(children: [
-                          Container(
-                            color: Colors.black,
+                _textController.text.isEmpty
+                    ? Column(
+                        children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Row(
+                              children: const [
+                                CategoryScreen(title: 'Sandwichs'),
+                                CategoryScreen(title: 'Tortillas'),
+                                CategoryScreen(title: 'Ensaldas'),
+                                CategoryScreen(title: 'Promos'),
+                                CategoryScreen(title: 'Bebidas'),
+                              ],
+                            ),
                           ),
-                          Container(
-                            color: Colors.blue,
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: SizedBox(
+                                  height: 140,
+                                  width: AppLayout.getSize(context).width,
+                                  child: PageView(children: [
+                                    Container(
+                                      color: Colors.black,
+                                    ),
+                                    Container(
+                                      color: Colors.blue,
+                                    ),
+                                    Container(
+                                      color: Colors.amber,
+                                    )
+                                  ]),
+                                ),
+                              )),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              Widget wg =
+                                  _buildProductCard(Product.getMenu()[index]);
+                              _listItems = Product.getMenu();
+                              return wg;
+                            },
+                            itemCount: Product.getMenu().length,
                           ),
-                          Container(
-                            color: Colors.amber,
-                          )
-                        ]),
-                      ),
-                    )),
-                if (_filteredItems.isNotEmpty)
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _filteredItems.length,
-                      itemBuilder: (context, index) =>
-                          _buildProductCard(_filteredItems[index]))
-                else
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      Widget wg = _buildProductCard(Product.getMenu()[index]);
-                      _listItems = Product.getMenu();
-                      return wg;
-                    },
-                    itemCount: Product.getMenu().length,
-                  ),
+                        ],
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _filteredItems.length,
+                        itemBuilder: (context, index) =>
+                            _buildProductCard(_filteredItems[index]))
               ],
             ),
           ),
