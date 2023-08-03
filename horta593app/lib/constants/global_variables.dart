@@ -12,7 +12,7 @@ class GlobalVariables {
   static const Color secondaryColor = Color(0xff73CC6B);
   static const Color primarybackground = Color(0xff27252A);
   static const Color greyHorta = Color(0xffb0a9a5);
-  // static const Color darkHorta = Color(0xff27252A);
+  static const Color background2 = Color(0xff363637);
   static const Color darkHorta2 = Color(0xff2E2C31);
 
   static const Color whiteletter = Color(0xffF0E8E0);

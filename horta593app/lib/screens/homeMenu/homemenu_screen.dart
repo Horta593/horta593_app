@@ -19,6 +19,24 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   int c = 0;
+  List<Product> _listItems = [];
+  TextEditingController _textController = TextEditingController();
+  List<Product> _filteredItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredItems = _listItems;
+  }
+
+  void _filterItems(value) {
+    setState(() {
+      _filteredItems = _listItems
+          .where((element) =>
+              element.name.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+    });
+  }
 
   void _showBottomSheet(BuildContext context, Product product) {
     showModalBottomSheet(
@@ -158,6 +176,36 @@ class _MenuScreenState extends State<MenuScreen> {
           body: SingleChildScrollView(
             child: Column(
               children: [
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _textController,
+                      decoration: const InputDecoration(
+                          filled: true,
+                          fillColor: GlobalVariables.background2,
+                          border: InputBorder.none,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: GlobalVariables.whiteletter,
+                          ),
+                          hintText: 'Buscar comida deliciosa...',
+                          hintStyle: TextStyle(
+                              color: GlobalVariables.whiteletter,
+                              fontSize: 14)),
+                      onChanged: (value) {
+                        _filterItems(value);
+                      },
+                    )),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.only(left: 20),
@@ -176,7 +224,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: SizedBox(
-                        height: 200,
+                        height: 140,
                         width: AppLayout.getSize(context).width,
                         child: PageView(children: [
                           Container(
@@ -191,14 +239,24 @@ class _MenuScreenState extends State<MenuScreen> {
                         ]),
                       ),
                     )),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return _buildProductCard(Product.getMenu()[index]);
-                  },
-                  itemCount: Product.getMenu().length,
-                ),
+                if (_filteredItems.isNotEmpty)
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _filteredItems.length,
+                      itemBuilder: (context, index) =>
+                          _buildProductCard(_filteredItems[index]))
+                else
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      Widget wg = _buildProductCard(Product.getMenu()[index]);
+                      _listItems = Product.getMenu();
+                      return wg;
+                    },
+                    itemCount: Product.getMenu().length,
+                  ),
               ],
             ),
           ),
