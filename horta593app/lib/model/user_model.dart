@@ -10,6 +10,7 @@ class User {
   String email;
   String firstName;
   String lastName;
+  String adress;
   String accessToken;
 
   User({
@@ -17,6 +18,7 @@ class User {
     required this.email,
     required this.firstName,
     required this.lastName,
+    required this.adress,
     required this.accessToken,
   }) {
     if (isValidToken()) {
@@ -32,6 +34,7 @@ class User {
       email: json['userEmail'],
       firstName: json['userFirstName'],
       lastName: json['userLastName'],
+      adress: json['userAddress'],
       accessToken: json['access'],
     );
     if (user.isValidToken()) {

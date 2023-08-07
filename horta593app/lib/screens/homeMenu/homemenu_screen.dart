@@ -8,6 +8,7 @@ import '../../model/product_model.dart';
 import '../../widgets/counter_custom.dart';
 import '../../widgets/text_normal.dart';
 import '../../widgets/text_title.dart';
+import '../cart/bloc/cart_bloc.dart';
 import 'bloc/product_bloc.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -39,6 +40,7 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   void _showBottomSheet(BuildContext context, Product product) {
+    final cartBloc = BlocProvider.of<CartBloc>(context);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -102,6 +104,12 @@ class _MenuScreenState extends State<MenuScreen> {
                     });
                   },
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    cartBloc.add(AddProduct(product));
+                  },
+                  child: const Text('Add cart'),
+                )
               ],
             ),
           ),
