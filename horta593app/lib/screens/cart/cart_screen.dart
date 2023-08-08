@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:horta593app/screens/order/order_screen.dart';
 import 'bloc/cart_bloc.dart';
 import '../../constants/global_variables.dart';
 import '../../model/product_model.dart';
@@ -53,7 +54,7 @@ class _CartScreen extends State<CartScreen> {
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(53, 143, 50, 1.0)),
+                                  color: GlobalVariables.greenHorta),
                             ),
                             const SizedBox(height: 4),
                             Text(
@@ -71,8 +72,7 @@ class _CartScreen extends State<CartScreen> {
                                   children: [
                                     Ink(
                                       child: IconButton(
-                                        color: const Color.fromRGBO(
-                                            212, 178, 36, 1.0),
+                                        color: GlobalVariables.yellow,
                                         onPressed: () {
                                           // Decrease quantity logic
                                         },
@@ -87,8 +87,7 @@ class _CartScreen extends State<CartScreen> {
                                         )),
                                     Ink(
                                       child: IconButton(
-                                        color: const Color.fromRGBO(
-                                            212, 178, 36, 1.0),
+                                        color: GlobalVariables.yellow,
                                         onPressed: () {
                                           // Increase quantity logic
                                         },
@@ -156,6 +155,7 @@ class _CartScreen extends State<CartScreen> {
                         backgroundColor: Color.fromRGBO(115, 204, 107, 1.0)),
                     onPressed: () {
                       // Place order logic
+                      const OrderScreen();
                     },
                     child: const Text('Pagar'),
                   ),

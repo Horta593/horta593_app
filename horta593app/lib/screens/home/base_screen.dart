@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/constants/global_variables.dart';
+import 'package:horta593app/screens/order/bloc/order_bloc.dart';
 
 import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
@@ -69,6 +70,9 @@ class _BaseScreenState extends State<BaseScreen> {
           ),
           BlocProvider<CartBloc>(
             create: (BuildContext context) => CartBloc(),
+          ),
+          BlocProvider<OrderBloc>(
+            create: (BuildContext context) => OrderBloc(),
           ),
         ],
         child: widgetOptions[selectIndex],
