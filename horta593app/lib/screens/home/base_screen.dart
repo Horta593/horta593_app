@@ -4,6 +4,7 @@ import 'package:horta593app/constants/global_variables.dart';
 
 import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
+import '../profile/profile_screen.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _BaseScreenState extends State<BaseScreen> {
     const MenuScreen(),
     const Text("Carrito"),
     const Text("Premios"),
-    const Text("Perfil"),
+    const ProfileScreen(),
   ];
   void _onItemsTapped(int index) {
     setState(() {
