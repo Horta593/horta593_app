@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:horta593app/widgets/text_normal.dart';
 
 import '../../constants/global_variables.dart';
 import '../../widgets/googlemap_screen.dart';
@@ -12,7 +9,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Padding(
           padding: EdgeInsets.only(top: 20),
@@ -39,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 15),
+          padding: const EdgeInsets.only(top: 15),
           child: Column(
             children: [
               Row(
