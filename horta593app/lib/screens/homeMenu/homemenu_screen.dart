@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/constants/utils/app_layout.dart';
+import 'package:horta593app/model/cart_item_model.dart';
 import 'package:horta593app/screens/category/category_screen.dart';
 
 import '../../constants/global_variables.dart';
@@ -106,7 +107,8 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    cartBloc.add(AddProduct(product));
+                    cartBloc.add(AddItemEvent(
+                        CartItem(product: product, quantity: _counter)));
                   },
                   child: const Text('Add cart'),
                 )
