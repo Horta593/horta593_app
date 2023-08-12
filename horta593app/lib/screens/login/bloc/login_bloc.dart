@@ -16,6 +16,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           email: event.email,
           password: event.password,
         );
+        print(await user);
         emit(LoginSuccessState(
           user,
         ));
@@ -25,7 +26,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginErrorState(e));
       } catch (e) {
         emit(LoginErrorState(
-          FormGeneralException(message: 'Unidentified error'),
+          FormGeneralException(message: 'Something error.'),
         ));
       }
     });

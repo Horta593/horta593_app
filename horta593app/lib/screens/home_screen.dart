@@ -17,12 +17,12 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 150),
             const Center(
               child: Image(
-                width: 400,
-                height: 400,
+                width: 300,
+                height: 300,
                 image: AssetImage('lib/constants/images/logo_dark.png'),
               ),
             ),
-            const SizedBox(height: 200),
+            const SizedBox(height: 100),
             Builder(builder: (context) {
               return Container(
                 padding: const EdgeInsets.only(left: 160, right: 160),

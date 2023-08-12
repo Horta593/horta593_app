@@ -4,7 +4,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horta593app/blocs/auth/auth_bloc.dart';
 import 'package:horta593app/exceptions/form_exceptions.dart';
+import 'package:horta593app/model/user_model.dart';
 import 'package:horta593app/screens/home/base_screen.dart';
+import 'package:horta593app/screens/home_screen.dart';
+import 'package:horta593app/screens/login/login_screen.dart';
+import 'package:horta593app/services/auth_service.dart';
 import 'package:horta593app/widgets/form_error_widget.dart';
 import 'package:horta593app/widgets/success_dialog.dart';
 
@@ -21,19 +25,19 @@ class RegisterScreen extends StatelessWidget {
   void submitForm(BuildContext context) {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       final data = _formKey.currentState?.value;
+      User user = User(
+          email: data!['email'],
+          firstName: data['first_name'],
+          lastName: data['last_name'],
+          accessToken: "");
       context.read<RegisterBloc>().add(
-            RegisterRequestEvent(
-              email: data!['email'],
-              password: data['password'],
-              firstName: data['first_name'],
-              lastName: data['last_name'],
-            ),
+            RegisterValidationEvent(user: user),
           );
     }
   }
 
   Future<bool> popScreen(state) async {
-    return state is! RegisterLoadingState;
+    return state is! RegisterSuccessState;
   }
 
   @override
@@ -119,7 +123,7 @@ class RegisterScreen extends StatelessWidget {
                                     ),
                                     const Center(
                                       child: Text(
-                                        "Register",
+                                        "Registro",
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: GlobalVariables.greyHorta,
@@ -157,10 +161,7 @@ class RegisterScreen extends StatelessWidget {
                                             FormBuilderValidators.compose([
                                           FormBuilderValidators.required(
                                               context),
-                                          FormBuilderValidators.match(
-                                            context,
-                                            r"^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$",
-                                          ),
+                                          // FormBuilderValidators.(context),
                                         ]),
                                       ),
                                     ),
@@ -215,11 +216,14 @@ class RegisterScreen extends StatelessWidget {
                                         name: 'email',
                                         decoration: const InputDecoration(
                                             labelStyle: TextStyle(
-                                                fontSize: 14,
                                                 color: GlobalVariables
-                                                    .whitebackgound),
+                                                    .whitebackgound,
+                                                fontSize: 14),
                                             labelText: "Email",
                                             contentPadding: EdgeInsets.all(10),
+                                            hintStyle: TextStyle(
+                                                color:
+                                                    GlobalVariables.greyHorta),
                                             border: OutlineInputBorder(
                                                 borderSide: BorderSide(
                                               color: GlobalVariables.greenHorta,
@@ -228,7 +232,6 @@ class RegisterScreen extends StatelessWidget {
                                                 borderSide: BorderSide(
                                               color: GlobalVariables.greenHorta,
                                             ))),
-                                        textInputAction: TextInputAction.done,
                                         validator:
                                             FormBuilderValidators.compose([
                                           FormBuilderValidators.required(
@@ -248,6 +251,13 @@ class RegisterScreen extends StatelessWidget {
                                             color:
                                                 GlobalVariables.whitebackgound),
                                         name: 'password',
+                                        validator:
+                                            FormBuilderValidators.compose([
+                                          FormBuilderValidators.required(
+                                              context),
+                                          FormBuilderValidators.minLength(
+                                              context, 8)
+                                        ]),
                                         decoration: const InputDecoration(
                                             labelStyle: TextStyle(
                                                 fontSize: 14,
@@ -280,25 +290,31 @@ class RegisterScreen extends StatelessWidget {
                                     ),
                                     OutlinedButton(
                                         onPressed: () {
-                                          if (state is! RegisterLoadingState) {
+                                          if (state is! RegisterInitialState) {
                                             submitForm(context);
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const BaseScreen()));
+                                                        HomeScreen()));
                                           }
                                         },
-                                        child: const SizedBox(
-                                          width: 380,
-                                          child: Text(
-                                            'Login',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        )),
+                                        child: SizedBox(
+                                            width: 380,
+                                            child: TextButton(
+                                              onPressed: () {
+                                                Map<String, dynamic> user_info =
+                                                    _formKey
+                                                        .currentState!.value;
+                                              },
+                                              child: const Text(
+                                                'Login',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ))),
                                   ],
                                 );
                               }),

@@ -9,6 +9,8 @@ import 'package:horta593app/model/user_model.dart';
 import 'package:horta593app/services/secure_storage_service.dart';
 import 'package:horta593app/services/helper_service.dart';
 
+import '../constants/api_constanst.dart';
+
 class AuthService {
   static const String loginPath = 'token/';
   static const String registerPath = 'users/';
@@ -81,8 +83,9 @@ class AuthService {
     required String email,
     required String password,
   }) async {
+    String url = "${API.BASE_URL}${API.LOGIN_ENDPOINT}";
     final response = await http.post(
-      HelperService.buildUri(loginPath),
+      Uri.parse(url),
       headers: HelperService.buildHeaders(),
       body: jsonEncode(
         {
@@ -91,11 +94,13 @@ class AuthService {
         },
       ),
     );
-
-    final statusType = (response.statusCode / 100).floor() * 100;
-    switch (statusType) {
+    switch (response.statusCode) {
       case 200:
         final json = jsonDecode(response.body);
+        json['userFirstName'] = '';
+        json['userLastName'] = '';
+        json['userEmail'] = email;
+
         final user = User.fromJson(json);
 
         saveUser(user);
