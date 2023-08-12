@@ -7,6 +7,7 @@ import '../homeMenu/homemenu_screen.dart';
 import '../profile/profile_screen.dart';
 
 class BaseScreen extends StatefulWidget {
+  static const String routeName = 'base-screen/';
   const BaseScreen({Key? key}) : super(key: key);
 
   @override
