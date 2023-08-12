@@ -20,10 +20,12 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  int _counter = 0;
   List<Product> _listItems = [];
   TextEditingController _textController = TextEditingController();
   List<Product> _filteredItems = [];
+  List<Product> _filteredItemsCategory = [];
+
+  get cartBloc => null;
 
   @override
   void initState() {
@@ -40,8 +42,18 @@ class _MenuScreenState extends State<MenuScreen> {
     });
   }
 
+  void _filterItemsCategory(category) {
+    setState(() {
+      _filteredItemsCategory = _listItems
+          .where((element) =>
+              element.category.toLowerCase().contains(category.toLowerCase()))
+          .toList();
+    });
+  }
+
   void _showBottomSheet(BuildContext context, Product product) {
-    final cartBloc = BlocProvider.of<CartBloc>(context);
+    int _counter = 0;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -107,6 +119,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    //cambiar con payment
                     cartBloc.add(AddItemEvent(
                         CartItem(product: product, quantity: _counter)));
                   },
@@ -120,7 +133,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget _buildProductCard(Product product) {
+  Widget buildProductCard(Product product) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: SizedBox(
@@ -143,7 +156,11 @@ class _MenuScreenState extends State<MenuScreen> {
                         topLeft: Radius.circular(5.0),
                         topRight: Radius.circular(5.0),
                       ),
-                      child: Image.network(product.imageurl, height: 90),
+                      child: Image.network(
+                        product.imageurl,
+                        height: 90,
+                        scale: 1.0,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -215,61 +232,105 @@ class _MenuScreenState extends State<MenuScreen> {
                       },
                     )),
                 _textController.text.isEmpty
-                    ? Column(
-                        children: [
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Row(
-                              children: const [
-                                CategoryScreen(title: 'Sandwichs'),
-                                CategoryScreen(title: 'Tortillas'),
-                                CategoryScreen(title: 'Ensaldas'),
-                                CategoryScreen(title: 'Promos'),
-                                CategoryScreen(title: 'Bebidas'),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: SizedBox(
-                                  height: 140,
-                                  width: AppLayout.getSize(context).width,
-                                  child: PageView(children: [
-                                    Container(
-                                      color: Colors.black,
-                                    ),
-                                    Container(
-                                      color: Colors.blue,
-                                    ),
-                                    Container(
-                                      color: Colors.amber,
-                                    )
-                                  ]),
+                    ? _filteredItemsCategory.isNotEmpty
+                        ? Column(
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _filteredItemsCategory.clear();
+                                          });
+                                        },
+                                        child: const Icon(Icons.arrow_back),
+                                      ))),
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: _filteredItemsCategory.length,
+                                  itemBuilder: (context, index) =>
+                                      buildProductCard(
+                                          _filteredItemsCategory[index]))
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Row(
+                                  children: [
+                                    CategoryScreen(
+                                        title: 'Sandwichs',
+                                        onPress: () {
+                                          _filterItemsCategory('Sandwichs');
+                                        }),
+                                    CategoryScreen(
+                                        title: 'Tortillas',
+                                        onPress: () {
+                                          _filterItemsCategory('Tortillas');
+                                        }),
+                                    CategoryScreen(
+                                        title: 'Ensaldas',
+                                        onPress: () {
+                                          _filterItemsCategory('Ensaladas');
+                                        }),
+                                    CategoryScreen(
+                                        title: 'Promos',
+                                        onPress: () {
+                                          _filterItemsCategory('Promos');
+                                        }),
+                                    CategoryScreen(
+                                        title: 'Bebidas',
+                                        onPress: () {
+                                          _filterItemsCategory('Bebidas');
+                                        }),
+                                  ],
                                 ),
-                              )),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              Widget wg =
-                                  _buildProductCard(Product.getMenu()[index]);
-                              _listItems = Product.getMenu();
-                              return wg;
-                            },
-                            itemCount: Product.getMenu().length,
-                          ),
-                        ],
-                      )
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: SizedBox(
+                                      height: 140,
+                                      width: AppLayout.getSize(context).width,
+                                      child: PageView(children: [
+                                        Container(
+                                          color: Colors.black,
+                                        ),
+                                        Container(
+                                          color: Colors.blue,
+                                        ),
+                                        Container(
+                                          color: Colors.amber,
+                                        )
+                                      ]),
+                                    ),
+                                  )),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  Widget wg = buildProductCard(
+                                      Product.getMenu()[index]);
+                                  _listItems = Product.getMenu();
+                                  return wg;
+                                },
+                                itemCount: Product.getMenu().length,
+                              ),
+                            ],
+                          )
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: _filteredItems.length,
                         itemBuilder: (context, index) =>
-                            _buildProductCard(_filteredItems[index]))
+                            buildProductCard(_filteredItems[index]))
               ],
             ),
           ),

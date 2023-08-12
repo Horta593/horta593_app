@@ -6,6 +6,7 @@ import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
 import '../cart/bloc/cart_bloc.dart';
 import '../cart/cart_screen.dart';
+import '../profile/profile_screen.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _BaseScreenState extends State<BaseScreen> {
     const MenuScreen(),
     const CartScreen(),
     const Text("Premios"),
-    const Text("Perfil"),
+    const ProfileScreen(),
   ];
   void _onItemsTapped(int index) {
     setState(() {
