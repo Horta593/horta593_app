@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/cart_item_model.dart';
+import '../payment/payment_screen.dart';
 import 'bloc/cart_bloc.dart';
 import '../../constants/global_variables.dart';
 import '../../model/product_model.dart';
@@ -91,7 +92,12 @@ class _CartScreen extends State<CartScreen> {
                                         color: const Color.fromRGBO(
                                             212, 178, 36, 1.0),
                                         onPressed: () {
-                                          // Increase quantity logic
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const PaymentScreen()),
+                                          );
                                         },
                                         icon: const Icon(Icons.add),
                                       ),
@@ -135,13 +141,11 @@ class _CartScreen extends State<CartScreen> {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: state.shoppingCart.length,
-                itemBuilder: (context, i) {
-                  List lst =
-                      state.shoppingCart.map((e) => _buildCartCard(e)).toList();
-                  return lst[i];
-                },
-              ),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: state.shoppingCart.length,
+                  itemBuilder: (context, index) =>
+                      _buildCartCard(state.shoppingCart[index])),
             ),
             Container(
               padding: const EdgeInsets.all(16),

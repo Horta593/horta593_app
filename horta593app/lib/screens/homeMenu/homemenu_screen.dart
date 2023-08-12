@@ -25,8 +25,6 @@ class _MenuScreenState extends State<MenuScreen> {
   List<Product> _filteredItems = [];
   List<Product> _filteredItemsCategory = [];
 
-  get cartBloc => null;
-
   @override
   void initState() {
     super.initState();
@@ -53,6 +51,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   void _showBottomSheet(BuildContext context, Product product) {
     int _counter = 0;
+    final cartBloc = BlocProvider.of<CartBloc>(context);
 
     showModalBottomSheet(
       context: context,
