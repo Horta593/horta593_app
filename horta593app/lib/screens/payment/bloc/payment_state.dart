@@ -7,4 +7,13 @@ abstract class PaymentState extends Equatable {
   List<Object> get props => [];
 }
 
-abstract class PaymentInitial extends PaymentState {}
+class PaymentInitial extends PaymentState {}
+
+class PaymentReady extends PaymentState {
+  final Pay newPay;
+
+  const PaymentReady({required this.newPay});
+
+  @override
+  List<Object> get props => [newPay];
+}
