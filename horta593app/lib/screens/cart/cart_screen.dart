@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:horta593app/screens/order/order_screen.dart';
+import '../../model/cart_item_model.dart';
 import 'bloc/cart_bloc.dart';
 import '../../constants/global_variables.dart';
 import '../../model/product_model.dart';
@@ -13,7 +13,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreen extends State<CartScreen> {
-  Widget _buildCartCard(Product product) {
+  Widget _buildCartCard(CartItem items) {
     return Column(
       children: [
         Padding(
@@ -38,7 +38,7 @@ class _CartScreen extends State<CartScreen> {
                           bottomLeft: Radius.circular(20.0),
                         ),
                         image: DecorationImage(
-                          image: NetworkImage(product.imageurl),
+                          image: NetworkImage(items.product.imageurl),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -50,7 +50,7 @@ class _CartScreen extends State<CartScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              product.name,
+                              items.product.name,
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -58,7 +58,7 @@ class _CartScreen extends State<CartScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              product.description,
+                              items.product.description,
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Color.fromRGBO(180, 180, 180, 1.0),
@@ -79,7 +79,7 @@ class _CartScreen extends State<CartScreen> {
                                         icon: const Icon(Icons.remove),
                                       ),
                                     ),
-                                    Text(product.price.toString(),
+                                    Text(items.product.price.toString(),
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -132,8 +132,13 @@ class _CartScreen extends State<CartScreen> {
         return Column(
           children: [
             Expanded(
-              child: ListView(
-                children: state.products.map((e) => _buildCartCard(e)).toList(),
+              child: ListView.builder(
+                itemCount: state.shoppingCart.length,
+                itemBuilder: (context, i) {
+                  List lst =
+                      state.shoppingCart.map((e) => _buildCartCard(e)).toList();
+                  return lst[i];
+                },
               ),
             ),
             Container(
@@ -142,14 +147,14 @@ class _CartScreen extends State<CartScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Subtotal: \$${calculateTotal(state.products).toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  // Text(
+                  //   'Subtotal: \$${calculateTotal(state.items).toStringAsFixed(2)}',
+                  //   style: const TextStyle(
+                  //     color: Colors.white,
+                  //     fontSize: 18,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromRGBO(115, 204, 107, 1.0)),
@@ -169,10 +174,10 @@ class _CartScreen extends State<CartScreen> {
   }
 }
 
-double calculateTotal(List<Product> products) {
-  double total = 0;
-  for (var product in products) {
-    total += product.price;
-  }
-  return total;
-}
+// double calculateTotal(CartItem items) {
+//   double total = 0;
+//   for (var item in items) {
+//     total += item.product.price;
+//   }
+//   return total;
+// }
