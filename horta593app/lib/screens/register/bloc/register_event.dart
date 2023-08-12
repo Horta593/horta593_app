@@ -4,19 +4,20 @@ abstract class RegisterEvent extends Equatable {
   const RegisterEvent();
 }
 
-class RegisterRequestEvent extends RegisterEvent {
-  final String email;
-  final String password;
-  final String firstName;
-  final String lastName;
+class RegisterValidationEvent extends RegisterEvent {
+  final User user;
 
-  const RegisterRequestEvent({
-    required this.email,
-    required this.password,
-    required this.firstName,
-    required this.lastName,
-  });
+  const RegisterValidationEvent({required this.user});
 
   @override
-  List<Object?> get props => [email, password];
+  List<Object?> get props => [user];
+}
+
+class RegisteredEvent extends RegisterEvent {
+  final User user;
+
+  const RegisteredEvent({required this.user});
+
+  @override
+  List<Object?> get props => [user];
 }

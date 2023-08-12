@@ -20,4 +20,6 @@ class GlobalVariables {
   static const Color whitebackgound = Color(0xffeae8ee);
   static const Color greenHorta = Color(0xff358E32);
   static const unselectedNavBarColor = Colors.black87;
+
+  static double borderPadding = 20;
 }

@@ -13,6 +13,7 @@ import '../cart/bloc/cart_bloc.dart';
 import 'bloc/product_bloc.dart';
 
 class MenuScreen extends StatefulWidget {
+  static const String routeName = 'menu-screen/';
   const MenuScreen({Key? key}) : super(key: key);
 
   @override

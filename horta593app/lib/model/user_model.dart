@@ -6,19 +6,15 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:horta593app/exceptions/user_exceptions.dart';
 
 class User {
-  final int id;
   String email;
   String firstName;
   String lastName;
-  String adress;
   String accessToken;
 
   User({
-    required this.id,
     required this.email,
     required this.firstName,
     required this.lastName,
-    required this.adress,
     required this.accessToken,
   }) {
     if (isValidToken()) {
@@ -30,12 +26,10 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     final user = User(
-      id: json['userId'],
       email: json['userEmail'],
       firstName: json['userFirstName'],
       lastName: json['userLastName'],
-      adress: json['userAddress'],
-      accessToken: json['access'],
+      accessToken: json['accessToken'],
     );
     if (user.isValidToken()) {
       return user;
@@ -67,11 +61,10 @@ class User {
   String toJson() {
     return jsonEncode(
       {
-        'userId': id,
         'userEmail': email,
         'userFirstName': firstName,
         'userLastName': lastName,
-        "access": accessToken,
+        "accessToken": accessToken,
       },
     );
   }

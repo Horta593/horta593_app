@@ -7,14 +7,21 @@ abstract class RegisterState extends Equatable {
   List<Object> get props => [];
 }
 
-class RegisterFormState extends RegisterState {}
+class RegisterInitialState extends RegisterState {}
 
-class RegisterLoadingState extends RegisterState {}
+class RegisterFormSuccessState extends RegisterState {
+  final User user;
+
+  const RegisterFormSuccessState({required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
 
 class RegisterSuccessState extends RegisterState {
   final User user;
 
-  const RegisterSuccessState(this.user);
+  const RegisterSuccessState({required this.user});
 
   @override
   List<Object> get props => [user];
