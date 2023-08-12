@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:horta593app/screens/order/order_screen.dart';
 import '../../model/cart_item_model.dart';
 import 'bloc/cart_bloc.dart';
 import '../../constants/global_variables.dart';
@@ -108,6 +109,11 @@ class _CartScreen extends State<CartScreen> {
                           color: Colors.white,
                           onPressed: () {
                             // Delete item logic
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const OrderScreen()),
+                            );
                           },
                           icon: const Icon(Icons.close),
                         ),
@@ -157,7 +163,7 @@ class _CartScreen extends State<CartScreen> {
                   // ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(115, 204, 107, 1.0)),
+                        backgroundColor: GlobalVariables.greenHorta),
                     onPressed: () {
                       // Place order logic
                       const OrderScreen();

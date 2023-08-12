@@ -1,22 +1,12 @@
 part of 'order_bloc.dart';
 
-abstract class OrderEvent extends Equatable {}
+abstract class OrderEvent extends Equatable {
+  const OrderEvent();
 
-class PlaceOrderEvent extends OrderEvent {
-  final Cart cart;
-
-  PlaceOrderEvent(this.cart);
   @override
-  List<Object?> get props => [cart];
+  List<Object> get props => [];
 }
 
-class RemoveOrderEvent extends OrderEvent {
-  final Cart cart;
+class OrderStatusEvent extends OrderEvent {}
 
-  RemoveOrderEvent(this.cart);
-  @override
-  List<Object?> get props => [cart];
-}
-
-
-// class GetCart extends OrderEvent {}
+class OrderPlaceEvent extends OrderEvent {}

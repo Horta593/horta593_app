@@ -7,6 +7,7 @@ import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
 import '../cart/bloc/cart_bloc.dart';
 import '../cart/cart_screen.dart';
+import '../order/bloc/order_bloc.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);

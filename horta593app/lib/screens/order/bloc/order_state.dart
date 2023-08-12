@@ -1,18 +1,26 @@
 part of 'order_bloc.dart';
 
 abstract class OrderState extends Equatable {
-  final Cart cart;
-  const OrderState({required this.cart});
+  const OrderState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
-class OrderEmpty extends OrderState {
-  const OrderEmpty({required Cart cart}) : super(cart: cart);
+class OrderInitial extends OrderState {}
+
+//mandar la lista de la ordenes de productos -> Payment!
+// class OrderPlaced extends OrderState {}
+class OrdergitStatus extends OrderState {
+// objeto obtenido :V ?
 }
 
-class OrderExists extends OrderState {
-  final Cart newCart;
-  const OrderExists(this.newCart) : super(cart: newCart);
+//error al momento de adquirir el status de la orden
+class OrderError extends OrderState {
+  final String errorMessage;
+
+  const OrderError(this.errorMessage);
+
+  @override
+  List<Object?> get props => [errorMessage];
 }
