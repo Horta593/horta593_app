@@ -4,15 +4,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horta593app/blocs/auth/auth_bloc.dart';
 import 'package:horta593app/exceptions/form_exceptions.dart';
-import 'package:horta593app/screens/home_screen.dart';
 import 'package:horta593app/screens/register/register_screen.dart';
 import 'package:horta593app/widgets/form_error_widget.dart';
-import 'package:horta593app/widgets/success_dialog.dart';
 
 import '../../constants/global_variables.dart';
 import '../home/base_screen.dart';
-import '../homeMenu/bloc/product_bloc.dart';
-import '../homeMenu/homemenu_screen.dart';
 import 'bloc/login_bloc.dart';
 
 class LoginScreen extends StatelessWidget {

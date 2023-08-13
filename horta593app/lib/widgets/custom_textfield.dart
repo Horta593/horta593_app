@@ -19,14 +19,14 @@ class CustomTexField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         TextFormField(
-
           obscureText: hidden,
           style: const TextStyle(color: GlobalVariables.whitebackgound),
           controller: controller,
           decoration: InputDecoration(
-              labelStyle: const TextStyle(color: GlobalVariables.secondaryColor),
+              labelStyle:
+                  const TextStyle(color: GlobalVariables.secondaryColor),
               labelText: header,
               contentPadding: new EdgeInsets.all(10),
               hintStyle: const TextStyle(color: GlobalVariables.greyHorta),
@@ -39,10 +39,8 @@ class CustomTexField extends StatelessWidget {
                   borderSide: BorderSide(
                 color: GlobalVariables.secondaryColor,
               ))),
-          validator: (val) {},
-
         ),
-        SizedBox(height: 20)
+        const SizedBox(height: 20)
       ],
     );
   }

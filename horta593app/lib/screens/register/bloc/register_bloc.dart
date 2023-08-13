@@ -3,24 +3,34 @@ import 'package:equatable/equatable.dart';
 import 'package:horta593app/model/user_model.dart';
 import 'package:horta593app/services/auth_service.dart';
 
+import '../../../exceptions/form_exceptions.dart';
+
 part 'register_event.dart';
 part 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  RegisterBloc() : super(RegisterInitialState()) {
-    on<RegisterValidationEvent>(((event, emit) async {
-      await Future<void>.delayed(const Duration(seconds: 1));
-      User userE =
-          User(email: "", firstName: "", lastName: "", accessToken: "");
-      emit(RegisterFormSuccessState(user: userE));
+  RegisterBloc() : super(RegisterFormState()) {
+    on<RegisterRequestEvent>(((event, emit) async {
+      emit(RegisterLoadingState());
+      try {
+        final user = await AuthService.register(
+          firstName: event.firstName,
+          lastName: event.lastName,
+          email: event.email,
+          password: event.password,
+        );
+        print("await user");
+        print(await user);
+        emit(RegisterSuccessState(user));
+      } on FormGeneralException catch (e) {
+        emit(RegisterErrorState(e));
+      } on FormFieldsException catch (e) {
+        emit(RegisterErrorState(e));
+      } catch (e) {
+        emit(RegisterErrorState(
+          FormGeneralException(message: 'Something error.'),
+        ));
+      }
     }));
-    on<RegisteredEvent>(
-      (event, emit) {
-        if (state is RegisterFormSuccessState) {
-          final state = this.state as RegisterSuccessState;
-          emit(RegisterFormSuccessState(user: event.user));
-        }
-      },
-    );
   }
 }
