@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/constants/utils/app_layout.dart';
@@ -78,7 +79,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Image.network(
-                    product.imageurl,
+                    product.image,
                     width: AppLayout.getSize(context).width * 0.9,
                   ),
                 ),
@@ -146,7 +147,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         topRight: Radius.circular(5.0),
                       ),
                       child: Image.network(
-                        product.imageurl,
+                        product.image,
                         height: 90,
                         scale: 1.0,
                       ),
@@ -179,154 +180,164 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductBloc, ProductState>(builder: (context, state) {
-      if (state is ProductInitial) {
-        return const CircularProgressIndicator(
-          color: Colors.amberAccent,
-        );
-      }
-      if (state is ProductLoaded) {
-        return Scaffold(
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _textController,
-                      decoration: const InputDecoration(
-                          filled: true,
-                          fillColor: GlobalVariables.background2,
-                          border: InputBorder.none,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: GlobalVariables.whiteletter,
-                          ),
-                          hintText: 'Buscar comida deliciosa...',
-                          hintStyle: TextStyle(
-                              color: GlobalVariables.whiteletter,
-                              fontSize: 14)),
-                      onChanged: (value) {
-                        _filterItems(value);
-                      },
-                    )),
-                _textController.text.isEmpty
-                    ? _filteredItemsCategory.isNotEmpty
-                        ? Column(
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            _filteredItemsCategory.clear();
-                                          });
-                                        },
-                                        child: const Icon(Icons.arrow_back),
-                                      ))),
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: _filteredItemsCategory.length,
-                                  itemBuilder: (context, index) =>
-                                      buildProductCard(
-                                          _filteredItemsCategory[index]))
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Row(
-                                  children: [
-                                    CategoryScreen(
-                                        title: 'Sandwichs',
-                                        onPress: () {
-                                          _filterItemsCategory('Sandwichs');
-                                        }),
-                                    CategoryScreen(
-                                        title: 'Tortillas',
-                                        onPress: () {
-                                          _filterItemsCategory('Tortillas');
-                                        }),
-                                    CategoryScreen(
-                                        title: 'Ensaldas',
-                                        onPress: () {
-                                          _filterItemsCategory('Ensaladas');
-                                        }),
-                                    CategoryScreen(
-                                        title: 'Promos',
-                                        onPress: () {
-                                          _filterItemsCategory('Promos');
-                                        }),
-                                    CategoryScreen(
-                                        title: 'Bebidas',
-                                        onPress: () {
-                                          _filterItemsCategory('Bebidas');
-                                        }),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: SizedBox(
-                                      height: 140,
-                                      width: AppLayout.getSize(context).width,
-                                      child: PageView(children: [
-                                        Container(
-                                          color: Colors.black,
-                                        ),
-                                        Container(
-                                          color: Colors.blue,
-                                        ),
-                                        Container(
-                                          color: Colors.amber,
-                                        )
-                                      ]),
-                                    ),
-                                  )),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  Widget wg = buildProductCard(
-                                      Product.getMenu()[index]);
-                                  _listItems = Product.getMenu();
-                                  return wg;
-                                },
-                                itemCount: Product.getMenu().length,
-                              ),
-                            ],
-                          )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _filteredItems.length,
-                        itemBuilder: (context, index) =>
-                            buildProductCard(_filteredItems[index]))
-              ],
+    return BlocProvider(
+      create: (context) => ProductBloc()..add(ProductRequestEvent()),
+      child: BlocBuilder<ProductBloc, ProductState>(builder: ((context, state) {
+        if (state is ProductLoadedState) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.amberAccent,
             ),
-          ),
+          );
+        }
+        if (state is ProductSuccessState) {
+          return _bodyMenu(context, state);
+        }
+        return const Center(
+          child: Text("Nothing!"),
         );
-      } else {
-        return const Text("Ups! Something went wrong!");
-      }
-    });
+      })),
+    );
+  }
+
+  Widget _bodyMenu(BuildContext context, ProductSuccessState state) {
+    List<Product> productList = state.products;
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _textController,
+                  decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: GlobalVariables.background2,
+                      border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: GlobalVariables.whiteletter,
+                      ),
+                      hintText: 'Buscar comida deliciosa...',
+                      hintStyle: TextStyle(
+                          color: GlobalVariables.whiteletter, fontSize: 14)),
+                  onChanged: (value) {
+                    _filterItems(value);
+                  },
+                )),
+            _textController.text.isEmpty
+                ? _filteredItemsCategory.isNotEmpty
+                    ? Column(
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _filteredItemsCategory.clear();
+                                      });
+                                    },
+                                    child: const Icon(Icons.arrow_back),
+                                  ))),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: _filteredItemsCategory.length,
+                              itemBuilder: (context, index) => buildProductCard(
+                                  _filteredItemsCategory[index]))
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          _categories(context),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: SizedBox(
+                                  height: 140,
+                                  width: AppLayout.getSize(context).width,
+                                  child: PageView(children: [
+                                    Container(
+                                      color: Colors.black,
+                                    ),
+                                    Container(
+                                      color: Colors.blue,
+                                    ),
+                                    Container(
+                                      color: Colors.amber,
+                                    )
+                                  ]),
+                                ),
+                              )),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              Widget wg = buildProductCard(productList[index]);
+                              _listItems = productList;
+                              return wg;
+                            },
+                            itemCount: productList.length,
+                          ),
+                        ],
+                      )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _filteredItems.length,
+                    itemBuilder: (context, index) =>
+                        buildProductCard(_filteredItems[index]))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _categories(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.only(left: 20),
+      child: Row(
+        children: [
+          CategoryScreen(
+              title: 'Sandwichs',
+              onPress: () {
+                _filterItemsCategory('Sandwichs');
+              }),
+          CategoryScreen(
+              title: 'Tortillas',
+              onPress: () {
+                _filterItemsCategory('Tortillas');
+              }),
+          CategoryScreen(
+              title: 'Ensaldas',
+              onPress: () {
+                _filterItemsCategory('Ensaladas');
+              }),
+          CategoryScreen(
+              title: 'Promos',
+              onPress: () {
+                _filterItemsCategory('Promos');
+              }),
+          CategoryScreen(
+              title: 'Bebidas',
+              onPress: () {
+                _filterItemsCategory('Bebidas');
+              }),
+        ],
+      ),
+    );
   }
 }

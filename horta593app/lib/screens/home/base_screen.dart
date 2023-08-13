@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/constants/global_variables.dart';
 
+import '../../services/secure_storage_service.dart';
 import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
 import '../profile/profile_screen.dart';
@@ -64,8 +65,8 @@ class _BaseScreenState extends State<BaseScreen> {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => ProductBloc()..add(LoadProduct()),
+          BlocProvider<ProductBloc>(
+            create: (context) => ProductBloc(),
           ),
         ],
         child: widgetOptions[selectIndex],
@@ -88,7 +89,3 @@ class _BaseScreenState extends State<BaseScreen> {
     );
   }
 }
-
-// MaterialPageRoute(
-
-//       ),),
