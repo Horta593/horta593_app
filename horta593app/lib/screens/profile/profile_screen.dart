@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/global_variables.dart';
-import '../../widgets/googlemap_screen.dart';
+import '../../services/googlemap_serviceS.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
