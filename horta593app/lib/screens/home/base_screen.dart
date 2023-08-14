@@ -4,8 +4,12 @@ import 'package:horta593app/constants/global_variables.dart';
 
 import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
+import '../cart/bloc/cart_bloc.dart';
+import '../cart/cart_screen.dart';
+import '../profile/profile_screen.dart';
 
 class BaseScreen extends StatefulWidget {
+  static const String routeName = 'base-screen/';
   const BaseScreen({Key? key}) : super(key: key);
 
   @override
@@ -16,9 +20,9 @@ class _BaseScreenState extends State<BaseScreen> {
   int selectIndex = 0;
   static final List<Widget> widgetOptions = <Widget>[
     const MenuScreen(),
-    const Text("Carrito"),
+    const CartScreen(),
     const Text("Premios"),
-    const Text("Perfil"),
+    const ProfileScreen(),
   ];
   void _onItemsTapped(int index) {
     setState(() {
@@ -65,6 +69,9 @@ class _BaseScreenState extends State<BaseScreen> {
           BlocProvider(
             create: (context) => ProductBloc()..add(LoadProduct()),
           ),
+          BlocProvider<CartBloc>(
+            create: (BuildContext context) => CartBloc(),
+          ),
         ],
         child: widgetOptions[selectIndex],
       ),
@@ -86,7 +93,3 @@ class _BaseScreenState extends State<BaseScreen> {
     );
   }
 }
-
-// MaterialPageRoute(
-
-//       ),),

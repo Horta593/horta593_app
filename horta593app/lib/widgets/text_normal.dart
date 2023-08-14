@@ -4,7 +4,9 @@ import '../constants/global_variables.dart';
 
 class NormalText extends StatelessWidget {
   final String text;
-  const NormalText({Key? key, required this.text}) : super(key: key);
+  final int? sizeT;
+  const NormalText({Key? key, required this.text, this.sizeT})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

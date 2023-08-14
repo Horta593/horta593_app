@@ -1,13 +1,13 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:horta593app/exceptions/form_exceptions.dart';
 import 'package:horta593app/exceptions/secure_storage_exceptions.dart';
 import 'package:horta593app/model/user_model.dart';
 import 'package:horta593app/services/secure_storage_service.dart';
 import 'package:horta593app/services/helper_service.dart';
+
+import '../constants/api_constanst.dart';
 
 class AuthService {
   static const String loginPath = 'token/';
@@ -39,25 +39,30 @@ class AuthService {
     required String firstName,
     required String lastName,
   }) async {
+    String url = "${API.BASE_URL}${API.SIGNUP_ENDPOINT}";
     final response = await http.post(
-      HelperService.buildUri(loginPath),
+      Uri.parse(url),
       headers: HelperService.buildHeaders(),
       body: jsonEncode(
         {
+          'firstName': firstName,
+          'lastName': lastName,
           'email': email,
           'password': password,
-          'first_name': firstName,
-          'last_name': lastName
+          'role': ''
         },
       ),
     );
 
-    final statusType = (response.statusCode / 100).floor() * 100;
-    switch (statusType) {
-      case 200:
+    switch (response.statusCode) {
+      case 201:
         final json = jsonDecode(response.body);
-        final user = User.fromJson(json);
+        json['userFirstName'] = firstName;
+        json['userLastName'] = lastName;
+        json['password'] = password;
+        json['userEmail'] = email;
 
+        final user = User.fromJson(json);
         saveUser(user);
 
         return user;
@@ -81,8 +86,9 @@ class AuthService {
     required String email,
     required String password,
   }) async {
+    String url = "${API.BASE_URL}${API.LOGIN_ENDPOINT}";
     final response = await http.post(
-      HelperService.buildUri(loginPath),
+      Uri.parse(url),
       headers: HelperService.buildHeaders(),
       body: jsonEncode(
         {
@@ -91,11 +97,14 @@ class AuthService {
         },
       ),
     );
-
-    final statusType = (response.statusCode / 100).floor() * 100;
-    switch (statusType) {
+    switch (response.statusCode) {
       case 200:
         final json = jsonDecode(response.body);
+        json['userFirstName'] = '';
+        json['userLastName'] = '';
+        json['password'] = '';
+        json['userEmail'] = email;
+
         final user = User.fromJson(json);
 
         saveUser(user);

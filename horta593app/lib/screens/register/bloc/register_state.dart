@@ -13,11 +13,7 @@ class RegisterLoadingState extends RegisterState {}
 
 class RegisterSuccessState extends RegisterState {
   final User user;
-
   const RegisterSuccessState(this.user);
-
-  @override
-  List<Object> get props => [user];
 }
 
 class RegisterErrorState extends RegisterState {
