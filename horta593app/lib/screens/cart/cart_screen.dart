@@ -77,11 +77,15 @@ class _CartScreen extends State<CartScreen> {
                                             212, 178, 36, 1.0),
                                         onPressed: () {
                                           // Decrease quantity logic
+                                          // final cartBloc =
+                                          //     context.read<CartBloc>();
+                                          // cartBloc.add(UpdateQuantity(
+                                          //     items, items.quantity));
                                         },
                                         icon: const Icon(Icons.remove),
                                       ),
                                     ),
-                                    Text(items.product.price.toString(),
+                                    Text(items.quantity.toString(),
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -91,14 +95,7 @@ class _CartScreen extends State<CartScreen> {
                                       child: IconButton(
                                         color: const Color.fromRGBO(
                                             212, 178, 36, 1.0),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const PaymentScreen()),
-                                          );
-                                        },
+                                        onPressed: () {},
                                         icon: const Icon(Icons.add),
                                       ),
                                     ) //poner la cantidad
@@ -116,6 +113,8 @@ class _CartScreen extends State<CartScreen> {
                           color: Colors.white,
                           onPressed: () {
                             // Delete item logic
+                            final cartBloc = context.read<CartBloc>();
+                            cartBloc.add(RemoveProduct(items.product));
                           },
                           icon: const Icon(Icons.close),
                         ),
@@ -140,12 +139,9 @@ class _CartScreen extends State<CartScreen> {
         return Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: state.shoppingCart.length,
-                  itemBuilder: (context, index) =>
-                      _buildCartCard(state.shoppingCart[index])),
+              child: ListView(
+                children: state.items.map((e) => _buildCartCard(e)).toList(),
+              ),
             ),
             Container(
               padding: const EdgeInsets.all(16),
@@ -166,6 +162,11 @@ class _CartScreen extends State<CartScreen> {
                         backgroundColor: Color.fromRGBO(115, 204, 107, 1.0)),
                     onPressed: () {
                       // Place order logic
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PaymentScreen()),
+                      );
                     },
                     child: const Text('Pagar'),
                   ),

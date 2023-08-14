@@ -1,19 +1,28 @@
 part of 'cart_bloc.dart';
 
-abstract class CartState extends Equatable {
-  final List<CartItem> shoppingCart;
+abstract class CartState {
+  final List<CartItem> items;
 
-  const CartState({this.shoppingCart = const []});
-
-  @override
-  List<Object> get props => [];
+  CartState({this.items = const []});
 }
 
 class CartEmpty extends CartState {
-  CartEmpty() : super(shoppingCart: []);
+  CartEmpty() : super(items: []);
 }
 
 class CartLoaded extends CartState {
-  final List<CartItem> newShoppingCart;
-  const CartLoaded(this.newShoppingCart) : super(shoppingCart: newShoppingCart);
+  final List<CartItem> newItems;
+  CartLoaded(this.newItems) : super(items: newItems);
+}
+
+class CartItemRemoved extends CartState {
+  final List<CartItem> updatedItems;
+
+  CartItemRemoved(List<CartItem> items, this.updatedItems)
+      : super(items: updatedItems);
+}
+
+class AddQuantityProduct extends CartState {
+  final List<CartItem> newItems;
+  AddQuantityProduct(this.newItems) : super(items: newItems);
 }
