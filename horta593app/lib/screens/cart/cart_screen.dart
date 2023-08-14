@@ -14,6 +14,14 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreen extends State<CartScreen> {
+  double calculateTotal(List<CartItem> items) {
+    double total = 0.0;
+    for (var item in items) {
+      total += item.product.price * item.quantity;
+    }
+    return total;
+  }
+
   Widget _buildCartCard(CartItem items) {
     return Column(
       children: [
@@ -149,14 +157,14 @@ class _CartScreen extends State<CartScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Text(
-                  //   'Subtotal: \$${calculateTotal(state.items).toStringAsFixed(2)}',
-                  //   style: const TextStyle(
-                  //     color: Colors.white,
-                  //     fontSize: 18,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
+                  Text(
+                    'Subtotal: \$${calculateTotal(state.items).toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromRGBO(115, 204, 107, 1.0)),
@@ -179,11 +187,3 @@ class _CartScreen extends State<CartScreen> {
     );
   }
 }
-
-// double calculateTotal(CartItem items) {
-//   double total = 0;
-//   for (var item in items) {
-//     total += item.product.price;
-//   }
-//   return total;
-// }
