@@ -117,10 +117,14 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-
-                    cartBloc.add(AddItem(
-                        CartItem(product: product, quantity: _counter)));
-
+                    // //cambiar con payment
+                    // cartBloc.add(AddItemEvent(
+                    //     CartItem(product: product, quantity: _counter)));
+                    CartItem item =
+                        CartItem(product: product, quantity: _counter);
+                    print("hoomemenu");
+                    print(item);
+                    BlocProvider.of<CartBloc>(context).add(AddItemEvent(item));
                   },
                   child: const Text('Add cart'),
                 )
