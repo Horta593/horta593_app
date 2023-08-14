@@ -39,7 +39,7 @@ class _CartScreen extends State<CartScreen> {
                           bottomLeft: Radius.circular(20.0),
                         ),
                         image: DecorationImage(
-                          image: NetworkImage(items.product.imageurl),
+                          image: NetworkImage(items.product.image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -76,11 +76,13 @@ class _CartScreen extends State<CartScreen> {
                                         color: const Color.fromRGBO(
                                             212, 178, 36, 1.0),
                                         onPressed: () {
+
                                           // Decrease quantity logic
                                           // final cartBloc =
                                           //     context.read<CartBloc>();
                                           // cartBloc.add(UpdateQuantity(
                                           //     items, items.quantity));
+
                                         },
                                         icon: const Icon(Icons.remove),
                                       ),
@@ -95,7 +97,9 @@ class _CartScreen extends State<CartScreen> {
                                       child: IconButton(
                                         color: const Color.fromRGBO(
                                             212, 178, 36, 1.0),
+
                                         onPressed: () {},
+
                                         icon: const Icon(Icons.add),
                                       ),
                                     ) //poner la cantidad
@@ -112,9 +116,11 @@ class _CartScreen extends State<CartScreen> {
                         IconButton(
                           color: Colors.white,
                           onPressed: () {
+
                             // Delete item logic
                             final cartBloc = context.read<CartBloc>();
                             cartBloc.add(RemoveProduct(items.product));
+
                           },
                           icon: const Icon(Icons.close),
                         ),
@@ -136,6 +142,7 @@ class _CartScreen extends State<CartScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
+
         return Column(
           children: [
             Expanded(
@@ -171,9 +178,38 @@ class _CartScreen extends State<CartScreen> {
                     child: const Text('Pagar'),
                   ),
                 ],
+
               ),
-            ),
-          ],
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: Color.fromRGBO(58, 65, 57, 1.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Text(
+                    //   'Subtotal: \$${calculateTotal(state.items).toStringAsFixed(2)}',
+                    //   style: const TextStyle(
+                    //     color: Colors.white,
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(115, 204, 107, 1.0)),
+                      onPressed: () {
+                        // Place order logic
+                      },
+                      child: const Text('Pagar'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
+        return Center(
+          child: Text("Nothing"),
         );
       },
     );

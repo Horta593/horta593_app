@@ -2,7 +2,9 @@ part of 'cart_bloc.dart';
 
 abstract class CartEvent {}
 
+
 class AddItem extends CartEvent {
+
   final CartItem item;
   AddItem(this.item);
 }

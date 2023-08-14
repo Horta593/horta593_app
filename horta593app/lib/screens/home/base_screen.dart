@@ -42,10 +42,10 @@ class _BaseScreenState extends State<BaseScreen> {
           color: GlobalVariables.secondaryColor,
           size: 40.0,
         ),
-        title: Column(
+        title: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               "Casa",
               style: TextStyle(
@@ -66,11 +66,8 @@ class _BaseScreenState extends State<BaseScreen> {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => ProductBloc()..add(LoadProduct()),
-          ),
-          BlocProvider<CartBloc>(
-            create: (BuildContext context) => CartBloc(),
+          BlocProvider<ProductBloc>(
+            create: (context) => ProductBloc(),
           ),
         ],
         child: widgetOptions[selectIndex],

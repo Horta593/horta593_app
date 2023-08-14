@@ -6,6 +6,7 @@ abstract class CartState {
   CartState({this.items = const []});
 }
 
+
 class CartEmpty extends CartState {
   CartEmpty() : super(items: []);
 }
@@ -25,4 +26,5 @@ class CartItemRemoved extends CartState {
 class AddQuantityProduct extends CartState {
   final List<CartItem> newItems;
   AddQuantityProduct(this.newItems) : super(items: newItems);
+
 }
