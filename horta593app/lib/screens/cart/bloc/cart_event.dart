@@ -7,6 +7,8 @@ abstract class CartEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class LoadItemCounter extends CartEvent {}
+
 class AddItemEvent extends CartEvent {
   final CartItem item;
 

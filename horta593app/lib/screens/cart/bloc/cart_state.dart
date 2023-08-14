@@ -9,11 +9,14 @@ abstract class CartState extends Equatable {
   List<Object> get props => [];
 }
 
-class CartEmpty extends CartState {
-  CartEmpty() : super(shoppingCart: []);
+class CartEmptyState extends CartState {
+  @override
+  List<Object> get props => [];
 }
 
-class CartLoaded extends CartState {
-  final List<CartItem> newShoppingCart;
-  const CartLoaded(this.newShoppingCart) : super(shoppingCart: newShoppingCart);
+class CartLoadedState extends CartState {
+  final List<CartItem> shoppingCart;
+  const CartLoadedState(this.shoppingCart);
+  @override
+  List<Object> get props => [shoppingCart];
 }

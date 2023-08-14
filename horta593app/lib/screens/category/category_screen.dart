@@ -28,17 +28,29 @@ class CategoryScreen extends StatelessWidget {
                 color: GlobalVariables.darkHorta2,
               ),
               child: (url != null)
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(url!),
-                        Text(
-                          title,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: GlobalVariables.whiteletter),
-                        )
-                      ],
+                  ? Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                              child: Image.network(
+                                url!,
+                                width: 70,
+                                height: 70,
+                              )),
+                          Text(
+                            title,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: GlobalVariables.whiteletter),
+                          )
+                        ],
+                      ),
                     )
                   : Align(
                       alignment: Alignment.center,

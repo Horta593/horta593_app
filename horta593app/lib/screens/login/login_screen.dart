@@ -44,6 +44,7 @@ class LoginScreen extends StatelessWidget {
             listener: (context, state) {
               if (state is LoginSuccessState) {
                 context.read<AuthBloc>().add(AuthAuthenticateEvent(state.user));
+
                 Navigator.pushNamed(context, BaseScreen.routeName);
               }
             },
