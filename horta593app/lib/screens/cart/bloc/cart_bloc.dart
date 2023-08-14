@@ -6,25 +6,43 @@ part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc() : super(CartEmptyState()) {
-    on<LoadItemCounter>((event, emit) {
-      emit(CartEmptyState());
-    });
+  CartBloc() : super(CartEmpty()) {
+    on<AddItem>((event, emit) {
+      // Check if the item already exists in the cart
+      bool itemExists = state.items.any((element) =>
+          element.product.idProduct == event.item.product.idProduct);
 
-    on<AddItemEvent>((event, emit) {
-      if (state is CartEmptyState) {
-        emit(CartLoadedState([event.item]));
-      } else if (state is CartLoadedState) {
-        emit(CartLoadedState(List.from((state as CartLoadedState).shoppingCart)
-          ..add(event.item)));
+      if (!itemExists) {
+        List<CartItem> newList = [...state.items, event.item];
+        emit(CartLoaded(newList));
       }
     });
 
-    on<RemoveItemEvent>((event, emit) {
-      if (state is CartLoadedState) {
-        emit(CartLoadedState(List.from((state as CartLoadedState).shoppingCart)
-          ..remove(event.item)));
+    on<RemoveProduct>((event, emit) {
+      List<CartItem> updateItems = state.items
+          .where((element) => element.product.idProduct != event.item.idProduct)
+          .toList();
+      emit(CartItemRemoved(state.items, updateItems));
+    });
+
+    on<UpdateQuantity>((event, emit) {
+      // Create a copy of the current list of items in the cart
+      List<CartItem> updatedList = List.from(state.items);
+
+      // Find the index of the item to be updated in the copied list
+      int itemIndex = updatedList.indexWhere(
+          (item) => item.product.idProduct == event.item.product.idProduct);
+
+      if (itemIndex != -1) {
+        // Update the quantity of the item at the specified index
+        updatedList[itemIndex] = event.item;
+      } else {
+        // If the item is not already in the list, add it
+        updatedList.add(event.item);
       }
+
+      emit(CartLoaded(updatedList)); // Emit the updated list
+
     });
   }
 }

@@ -76,9 +76,13 @@ class _CartScreen extends State<CartScreen> {
                                         color: const Color.fromRGBO(
                                             212, 178, 36, 1.0),
                                         onPressed: () {
-                                          setState(() {
-                                            items.quantity--;
-                                          });
+
+                                          // Decrease quantity logic
+                                          // final cartBloc =
+                                          //     context.read<CartBloc>();
+                                          // cartBloc.add(UpdateQuantity(
+                                          //     items, items.quantity));
+
                                         },
                                         icon: const Icon(Icons.remove),
                                       ),
@@ -93,17 +97,9 @@ class _CartScreen extends State<CartScreen> {
                                       child: IconButton(
                                         color: const Color.fromRGBO(
                                             212, 178, 36, 1.0),
-                                        onPressed: () {
-                                          setState(() {
-                                            items.quantity++;
-                                          });
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //       builder: (context) =>
-                                          //           const PaymentScreen()),
-                                          // );
-                                        },
+
+                                        onPressed: () {},
+
                                         icon: const Icon(Icons.add),
                                       ),
                                     ) //poner la cantidad
@@ -120,8 +116,11 @@ class _CartScreen extends State<CartScreen> {
                         IconButton(
                           color: Colors.white,
                           onPressed: () {
-                            BlocProvider.of<CartBloc>(context)
-                                .add(RemoveItemEvent(items));
+
+                            // Delete item logic
+                            final cartBloc = context.read<CartBloc>();
+                            cartBloc.add(RemoveProduct(items.product));
+
                           },
                           icon: const Icon(Icons.close),
                         ),
@@ -143,19 +142,43 @@ class _CartScreen extends State<CartScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
-        if (state is CartEmptyState) {
-          return Center(child: Text("Empty Cart"));
-        }
-        if (state is CartLoadedState) {
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: state.shoppingCart.length,
-                    itemBuilder: (context, index) =>
-                        _buildCartCard(state.shoppingCart[index])),
+
+        return Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: state.items.map((e) => _buildCartCard(e)).toList(),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Color.fromRGBO(58, 65, 57, 1.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Text(
+                  //   'Subtotal: \$${calculateTotal(state.items).toStringAsFixed(2)}',
+                  //   style: const TextStyle(
+                  //     color: Colors.white,
+                  //     fontSize: 18,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(115, 204, 107, 1.0)),
+                    onPressed: () {
+                      // Place order logic
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PaymentScreen()),
+                      );
+                    },
+                    child: const Text('Pagar'),
+                  ),
+                ],
+
               ),
               Container(
                 padding: const EdgeInsets.all(16),
