@@ -7,18 +7,24 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horta593app/router.dart';
 
 import 'blocs/auth/auth_bloc.dart';
+import 'screens/cart/bloc/cart_bloc.dart';
 
 void main() {
-  runApp(const App());
+  runApp(App());
 }
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  final CartBloc _cartBloc = CartBloc();
+  final AuthBloc _authBloc = AuthBloc();
+  // const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => _cartBloc),
+        BlocProvider(create: (context) => _authBloc)
+      ],
       child: MaterialApp(
         title: 'Horta593',
         debugShowCheckedModeBanner: false,

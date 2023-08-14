@@ -6,10 +6,12 @@ import 'package:horta593app/screens/category/bloc/categories_bloc.dart';
 import 'package:horta593app/screens/category/category_screen.dart';
 
 import '../../constants/global_variables.dart';
+import '../../model/cart_item_model.dart';
 import '../../model/product_model.dart';
 import '../../widgets/counter_custom.dart';
 import '../../widgets/text_normal.dart';
 import '../../widgets/text_title.dart';
+import '../cart/bloc/cart_bloc.dart';
 import 'bloc/product_bloc.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -113,6 +115,19 @@ class _MenuScreenState extends State<MenuScreen> {
                     });
                   },
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    // //cambiar con payment
+                    // cartBloc.add(AddItemEvent(
+                    //     CartItem(product: product, quantity: _counter)));
+                    CartItem item =
+                        CartItem(product: product, quantity: _counter);
+                    print("hoomemenu");
+                    print(item);
+                    BlocProvider.of<CartBloc>(context).add(AddItemEvent(item));
+                  },
+                  child: const Text('Add cart'),
+                )
               ],
             ),
           ),

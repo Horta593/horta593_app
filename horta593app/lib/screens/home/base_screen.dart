@@ -4,6 +4,8 @@ import 'package:horta593app/constants/global_variables.dart';
 
 import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
+import '../cart/bloc/cart_bloc.dart';
+import '../cart/cart_screen.dart';
 import '../profile/profile_screen.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -18,7 +20,7 @@ class _BaseScreenState extends State<BaseScreen> {
   int selectIndex = 0;
   static final List<Widget> widgetOptions = <Widget>[
     const MenuScreen(),
-    const Text("Carrito"),
+    const CartScreen(),
     const Text("Premios"),
     const ProfileScreen(),
   ];
