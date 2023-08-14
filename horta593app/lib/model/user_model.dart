@@ -9,12 +9,14 @@ class User {
   String email;
   String firstName;
   String lastName;
+  String password;
   String accessToken;
 
   User({
     required this.email,
     required this.firstName,
     required this.lastName,
+    required this.password,
     required this.accessToken,
   }) {
     if (isValidToken()) {
@@ -26,9 +28,10 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     final user = User(
-      email: json['userEmail'],
       firstName: json['userFirstName'],
       lastName: json['userLastName'],
+      email: json['userEmail'],
+      password: json['password'],
       accessToken: json['accessToken'],
     );
     if (user.isValidToken()) {
@@ -64,6 +67,7 @@ class User {
         'userEmail': email,
         'userFirstName': firstName,
         'userLastName': lastName,
+        'password': password,
         "accessToken": accessToken,
       },
     );

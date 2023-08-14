@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:horta593app/screens/home/base_screen.dart';
-import 'package:horta593app/screens/homeMenu/homemenu_screen.dart';
-import 'package:horta593app/screens/home_screen.dart';
 import 'package:horta593app/screens/login/login_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {

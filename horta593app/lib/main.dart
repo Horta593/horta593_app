@@ -4,7 +4,6 @@ import 'package:horta593app/screens/home_screen.dart';
 import 'package:horta593app/constants/global_variables.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:horta593app/screens/splash_screen.dart';
 import 'package:horta593app/router.dart';
 
 import 'blocs/auth/auth_bloc.dart';
