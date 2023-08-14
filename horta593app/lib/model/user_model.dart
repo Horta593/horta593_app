@@ -11,6 +11,9 @@ class User {
   String lastName;
   String password;
   String accessToken;
+  String? latitude;
+  String? longitud;
+  String? address;
 
   User({
     required this.email,
@@ -18,6 +21,9 @@ class User {
     required this.lastName,
     required this.password,
     required this.accessToken,
+    this.latitude,
+    this.longitud,
+    this.address,
   }) {
     if (isValidToken()) {
       getNewToken();
@@ -41,8 +47,35 @@ class User {
     }
   }
 
+  factory User.fromJsonInfo(Map<String, dynamic> json) {
+    final user = User(
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        email: json['email'],
+        password: "",
+        accessToken: json['accessToken'],
+        latitude: json['latitude'],
+        longitud: json['longitud'],
+        address: json['address']);
+    if (user.isValidToken()) {
+      return user;
+    } else {
+      throw InvalidUserException();
+    }
+  }
+
   String fullName() {
-    return firstName + ' ' + lastName;
+    return firstName.toUpperCase() + ' ' + lastName.toUpperCase();
+  }
+
+  List<String> getLocation() {
+    if (latitude != null && longitud != null) return [latitude!, longitud!];
+    return [];
+  }
+
+  String getAddress() {
+    if (address != null) return address!;
+    return '';
   }
 
   bool isValidToken() {

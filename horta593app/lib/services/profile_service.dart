@@ -1,16 +1,14 @@
-import 'package:horta593app/services/helper_service.dart';
-import 'package:horta593app/services/secure_storage_service.dart';
+import 'dart:convert';
 
 import '../constants/api_constanst.dart';
 import '../exceptions/form_exceptions.dart';
 import '../exceptions/secure_storage_exceptions.dart';
-import '../model/product_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 import '../model/user_model.dart';
+import 'helper_service.dart';
+import 'secure_storage_service.dart';
+import 'package:http/http.dart' as http;
 
-class ProductService {
+class ProfileService {
   static Future<User> loadUser() async {
     final json = await SecureStorageService.storage.read(
       key: SecureStorageService.userKey,
@@ -22,18 +20,30 @@ class ProductService {
     }
   }
 
-  static Future<List<Product>> getProducts() async {
-    String url = "${API.BASE_URL}${API.PRODUCT_ENDPOINT}";
+  static void saveUser(User user) async {
+    await SecureStorageService.storage.write(
+      key: SecureStorageService.userKey,
+      value: user.toJson(),
+    );
+  }
+
+  static Future<User> getProfileInfo() async {
+    String url = "${API.BASE_URL}${API.ME_ENDPOINT}";
     User user = await loadUser();
     String token = user.accessToken;
+
     final response = await http.get(Uri.parse(url),
         headers: HelperService.buildHeaders(accessToken: token));
 
     switch (response.statusCode) {
       case 200:
-        final List result = jsonDecode(response.body);
-        final List<Product> r = result.map((e) => Product.fromJson(e)).toList();
-        return r;
+        final json = jsonDecode(response.body);
+        json['accessToken'] = token;
+        final user = User.fromJsonInfo(json);
+
+        saveUser(user);
+
+        return user;
       case 400:
         final json = jsonDecode(response.body);
         throw handleFormErrors(json);

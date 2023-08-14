@@ -16,4 +16,8 @@ class API {
   static const String CATEGORIES_ENDPOINT = '/category';
   //[GET]
   static const String PRODUCT_BY_CATEGORY_ENDPOINT = "/category/{id}/products";
+
+  //User
+  //[GET]
+  static const String ME_ENDPOINT = '/user/me';
 }

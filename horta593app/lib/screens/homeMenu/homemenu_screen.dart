@@ -245,7 +245,10 @@ class _MenuScreenState extends State<MenuScreen> {
                                         _filteredItemsCategory.clear();
                                       });
                                     },
-                                    child: const Icon(Icons.arrow_back),
+                                    child: const Icon(
+                                      Icons.arrow_back,
+                                      color: GlobalVariables.whiteletter,
+                                    ),
                                   ))),
                           ListView.builder(
                               shrinkWrap: true,
@@ -340,62 +343,6 @@ class _MenuScreenState extends State<MenuScreen> {
           );
         })),
       ),
-      //   Row(
-      // children: [
-      //   CategoryScreen(
-      //       title: 'Sandwichs',
-      //       onPress: () {
-      //         _filterItemsCategory('Sandwichs');
-      //       }),
-      //   CategoryScreen(
-      //       title: 'Tortillas',
-      //       onPress: () {
-      //         _filterItemsCategory('Tortillas');
-      //       }),
-      //   CategoryScreen(
-      //       title: 'Ensaldas',
-      //       onPress: () {
-      //         _filterItemsCategory('Ensaladas');
-      //       }),
-      //   CategoryScreen(
-      //       title: 'Promos',
-      //       onPress: () {
-      //         _filterItemsCategory('Promos');
-      //       }),
-      //   CategoryScreen(
-      //       title: 'Bebidas',
-      //       onPress: () {
-      //         _filterItemsCategory('Bebidas');
-      //       }),
-      // ],
-      // ),
     );
   }
-
-  // Widget _bodyCategories(BuildContext context, List<Category> categoryList) {
-  //   return BlocBuilder<CategoriesBloc, CategoriesState>(
-  //       builder: (context, state) {
-  //     return Row(
-  //       children: categoryList
-  //           .map((item) => CategoryScreen(
-  //                 title: item.name.toUpperCase(),
-  //                 url: item.icon,
-  //                 onPress: () async {
-  //                   final bloc = CategoriesBloc();
-  //                   bloc.add(CategoriesProductsRequestEvent(item.id));
-  //                   final state = await bloc.stream
-  //                       .firstWhere((s) => s is CategoryProductSuccessState);
-
-  //                   if (state is CategoryProductSuccessState) {
-  //                     setState(() {
-  //                       _filteredItemsCategory = state.categoriesproducts;
-  //                     });
-  //                   }
-  //                   // Optionally navigate to a new screen here or show a modal with the products
-  //                 },
-  //               ))
-  //           .toList(),
-  //     );
-  //   });
-  // }
 }
