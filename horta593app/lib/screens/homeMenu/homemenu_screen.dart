@@ -1,7 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/constants/utils/app_layout.dart';
+import 'package:horta593app/model/category_model.dart';
+import 'package:horta593app/screens/category/bloc/categories_bloc.dart';
 import 'package:horta593app/screens/category/category_screen.dart';
 
 import '../../constants/global_variables.dart';
@@ -40,12 +41,9 @@ class _MenuScreenState extends State<MenuScreen> {
     });
   }
 
-  void _filterItemsCategory(category) {
+  void _filterItemsCategory(productofCategoryList) {
     setState(() {
-      _filteredItemsCategory = _listItems
-          .where((element) =>
-              element.category.toLowerCase().contains(category.toLowerCase()))
-          .toList();
+      _filteredItemsCategory = productofCategoryList;
     });
   }
 
@@ -270,14 +268,14 @@ class _MenuScreenState extends State<MenuScreen> {
                                   width: AppLayout.getSize(context).width,
                                   child: PageView(children: [
                                     Container(
+                                      color: Colors.amber,
+                                    ),
+                                    Container(
                                       color: Colors.black,
                                     ),
                                     Container(
                                       color: Colors.blue,
                                     ),
-                                    Container(
-                                      color: Colors.amber,
-                                    )
                                   ]),
                                 ),
                               )),
@@ -309,35 +307,95 @@ class _MenuScreenState extends State<MenuScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.only(left: 20),
-      child: Row(
-        children: [
-          CategoryScreen(
-              title: 'Sandwichs',
-              onPress: () {
-                _filterItemsCategory('Sandwichs');
-              }),
-          CategoryScreen(
-              title: 'Tortillas',
-              onPress: () {
-                _filterItemsCategory('Tortillas');
-              }),
-          CategoryScreen(
-              title: 'Ensaldas',
-              onPress: () {
-                _filterItemsCategory('Ensaladas');
-              }),
-          CategoryScreen(
-              title: 'Promos',
-              onPress: () {
-                _filterItemsCategory('Promos');
-              }),
-          CategoryScreen(
-              title: 'Bebidas',
-              onPress: () {
-                _filterItemsCategory('Bebidas');
-              }),
-        ],
+      child: BlocProvider(
+        create: (context) => CategoriesBloc()..add(CategoryRequestEvent()),
+        child: BlocBuilder<CategoriesBloc, CategoriesState>(
+            builder: ((context, state) {
+          if (state is CategoryLoadedState) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: GlobalVariables.greenHorta,
+              ),
+            );
+          }
+          if (state is CategoriesProductsSuccessState) {
+            List<Category> categoryList = state.categories;
+            return Row(
+              children: [
+                ...categoryList
+                    .map((item) => CategoryScreen(
+                          title: item.name.toUpperCase(),
+                          url: item.icon,
+                          onPress: () {
+                            _filterItemsCategory(
+                                state.productsCategories[item.id]);
+                          },
+                        ))
+                    .toList(),
+              ],
+            );
+          }
+          return const Center(
+            child: Text("Nothing!"),
+          );
+        })),
       ),
+      //   Row(
+      // children: [
+      //   CategoryScreen(
+      //       title: 'Sandwichs',
+      //       onPress: () {
+      //         _filterItemsCategory('Sandwichs');
+      //       }),
+      //   CategoryScreen(
+      //       title: 'Tortillas',
+      //       onPress: () {
+      //         _filterItemsCategory('Tortillas');
+      //       }),
+      //   CategoryScreen(
+      //       title: 'Ensaldas',
+      //       onPress: () {
+      //         _filterItemsCategory('Ensaladas');
+      //       }),
+      //   CategoryScreen(
+      //       title: 'Promos',
+      //       onPress: () {
+      //         _filterItemsCategory('Promos');
+      //       }),
+      //   CategoryScreen(
+      //       title: 'Bebidas',
+      //       onPress: () {
+      //         _filterItemsCategory('Bebidas');
+      //       }),
+      // ],
+      // ),
     );
   }
+
+  // Widget _bodyCategories(BuildContext context, List<Category> categoryList) {
+  //   return BlocBuilder<CategoriesBloc, CategoriesState>(
+  //       builder: (context, state) {
+  //     return Row(
+  //       children: categoryList
+  //           .map((item) => CategoryScreen(
+  //                 title: item.name.toUpperCase(),
+  //                 url: item.icon,
+  //                 onPress: () async {
+  //                   final bloc = CategoriesBloc();
+  //                   bloc.add(CategoriesProductsRequestEvent(item.id));
+  //                   final state = await bloc.stream
+  //                       .firstWhere((s) => s is CategoryProductSuccessState);
+
+  //                   if (state is CategoryProductSuccessState) {
+  //                     setState(() {
+  //                       _filteredItemsCategory = state.categoriesproducts;
+  //                     });
+  //                   }
+  //                   // Optionally navigate to a new screen here or show a modal with the products
+  //                 },
+  //               ))
+  //           .toList(),
+  //     );
+  //   });
+  // }
 }

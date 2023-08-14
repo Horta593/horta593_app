@@ -29,15 +29,3 @@ class ProductErrorState extends ProductState {
   @override
   List<Object> get props => [exception];
 }
-
-class CategoryLoadedState extends ProductState {
-  @override
-  List<Object> get props => [];
-}
-
-class CategorySuccessState extends ProductState {
-  final List<Category> categories;
-  const CategorySuccessState(this.categories);
-  @override
-  List<Object> get props => [categories];
-}

@@ -4,7 +4,6 @@ import 'package:horta593app/model/product_model.dart';
 import 'package:horta593app/services/product_service.dart';
 
 import '../../../exceptions/form_exceptions.dart';
-import '../../../model/category_model.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
