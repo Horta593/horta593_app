@@ -24,6 +24,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (state is CartLoadedState) {
         emit(CartLoadedState(List.from((state as CartLoadedState).shoppingCart)
           ..remove(event.item)));
+
+        if (state.shoppingCart.isEmpty) {
+          print(state.shoppingCart.isEmpty);
+          emit(CartEmptyState());
+        }
       }
     });
   }

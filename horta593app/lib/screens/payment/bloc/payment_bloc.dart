@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:horta593app/model/cart_item_model.dart';
 import 'package:horta593app/model/pay_model.dart';
 
 part 'payment_event.dart';

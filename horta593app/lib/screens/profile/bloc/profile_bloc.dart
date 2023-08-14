@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:horta593app/services/profile_service.dart';
-import 'package:meta/meta.dart';
 
 import '../../../exceptions/form_exceptions.dart';
 import '../../../model/user_model.dart';

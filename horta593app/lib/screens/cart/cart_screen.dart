@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:horta593app/constants/global_variables.dart';
 import '../../model/cart_item_model.dart';
-import '../payment/payment_screen.dart';
 import 'bloc/cart_bloc.dart';
-import '../../constants/global_variables.dart';
-import '../../model/product_model.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -144,7 +142,11 @@ class _CartScreen extends State<CartScreen> {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
         if (state is CartEmptyState) {
-          return Center(child: Text("Empty Cart"));
+          return const Center(
+              child: Text(
+            "Empty Cart",
+            style: TextStyle(color: GlobalVariables.greyHorta),
+          ));
         }
         if (state is CartLoadedState) {
           return Column(
