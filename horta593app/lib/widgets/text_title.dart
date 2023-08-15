@@ -4,18 +4,26 @@ import '../constants/global_variables.dart';
 
 class TitleCustom extends StatelessWidget {
   final String title;
-  const TitleCustom({Key? key, required this.title}) : super(key: key);
+  final double? sizeT;
+  const TitleCustom({Key? key, required this.title, this.sizeT = 15})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: const TextStyle(
-          fontSize: 15,
-          color: GlobalVariables.greenHorta,
-          fontWeight: FontWeight.bold),
-      maxLines: 3,
-      softWrap: true,
+    return Row(
+      children: [
+        Expanded(
+            flex: 1,
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontSize: sizeT,
+                  color: GlobalVariables.greenHorta,
+                  fontWeight: FontWeight.bold),
+              maxLines: 3,
+              softWrap: true,
+            ))
+      ],
     );
   }
 }
