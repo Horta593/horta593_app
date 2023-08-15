@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:horta593app/model/pay_model.dart';
+import 'package:horta593app/screens/payment/bloc/payment_bloc.dart';
+import 'package:horta593app/screens/payment/bloc/payment_event.dart';
 import '../../model/cart_item_model.dart';
 import '../payment/payment_screen.dart';
 import 'bloc/cart_bloc.dart';
@@ -167,13 +170,23 @@ class _CartScreen extends State<CartScreen> {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(115, 204, 107, 1.0)),
+                        backgroundColor: GlobalVariables.greenHorta),
                     onPressed: () {
                       // Place order logic
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const PaymentScreen()),
+                          builder: (context) => BlocProvider<PaymentBloc>(
+                            create: (context) => PaymentBloc()
+                              ..add(InitializePayment(
+                                  pay: Pay(
+                                      name: "",
+                                      personalId: "",
+                                      email: "",
+                                      shoppingCart: state.items))),
+                            child: const PaymentScreen(),
+                          ),
+                        ),
                       );
                     },
                     child: const Text('Pagar'),
