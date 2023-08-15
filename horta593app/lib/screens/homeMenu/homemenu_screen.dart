@@ -124,7 +124,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         CartItem(product: product, quantity: _counter);
                     print("hoomemenu");
                     print(item);
-                    BlocProvider.of<CartBloc>(context).add(AddItemEvent(item));
+                    BlocProvider.of<CartBloc>(context).add(AddItem(item));
                   },
                   child: const Text('Add cart'),
                 )
