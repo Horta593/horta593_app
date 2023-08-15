@@ -186,7 +186,7 @@ class LoginScreen extends StatelessWidget {
                   }
                 },
                 child: const SizedBox(
-                  width: 280,
+                  width: 260,
                   child: Text(
                     'Login',
                     textAlign: TextAlign.center,
@@ -205,7 +205,7 @@ class LoginScreen extends StatelessWidget {
                   );
                 },
                 child: const SizedBox(
-                  width: 280,
+                  width: 260,
                   child: Text(
                     'Sign Up',
                     textAlign: TextAlign.center,
