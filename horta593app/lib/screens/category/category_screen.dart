@@ -43,12 +43,13 @@ class CategoryScreen extends StatelessWidget {
                                 width: 70,
                                 height: 70,
                               )),
-                          Text(
+                          Expanded(
+                              child: Text(
                             title,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 color: GlobalVariables.whiteletter),
-                          )
+                          ))
                         ],
                       ),
                     )
