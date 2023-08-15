@@ -274,7 +274,7 @@ class RegisterScreen extends StatelessWidget {
                   }
                 },
                 child: const SizedBox(
-                  width: 280,
+                  width: 270,
                   child: Text(
                     'Register',
                     textAlign: TextAlign.center,

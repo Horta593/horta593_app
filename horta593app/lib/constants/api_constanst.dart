@@ -1,5 +1,6 @@
 class API {
-  static const String BASE_URL = "http://10.0.2.2:3001";
+  // static const String BASE_URL = "http://10.0.2.2:3001";
+  static const String BASE_URL = "http://127.0.0.1:3001";
 
   //Authentication
   //[POST]

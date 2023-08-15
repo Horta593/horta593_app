@@ -40,6 +40,7 @@ class AuthService {
     required String lastName,
   }) async {
     String url = "${API.BASE_URL}${API.SIGNUP_ENDPOINT}";
+    print(url);
     final response = await http.post(
       Uri.parse(url),
       headers: HelperService.buildHeaders(),
@@ -53,7 +54,7 @@ class AuthService {
         },
       ),
     );
-
+    print(response.statusCode);
     switch (response.statusCode) {
       case 201:
         final json = jsonDecode(response.body);
@@ -87,6 +88,7 @@ class AuthService {
     required String password,
   }) async {
     String url = "${API.BASE_URL}${API.LOGIN_ENDPOINT}";
+    print(url);
     final response = await http.post(
       Uri.parse(url),
       headers: HelperService.buildHeaders(),
@@ -97,6 +99,7 @@ class AuthService {
         },
       ),
     );
+    print(response.statusCode);
     switch (response.statusCode) {
       case 200:
         final json = jsonDecode(response.body);
@@ -113,6 +116,9 @@ class AuthService {
       case 400:
         final json = jsonDecode(response.body);
         throw handleFormErrors(json);
+      case 401:
+        throw FormGeneralException(message: 'User does not exists');
+
       case 300:
       case 500:
       default:
