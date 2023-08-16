@@ -53,6 +53,7 @@ dependencies:
   go_router: ^9.0.0
   fluentui_system_icons: ^1.1.208
   image_picker: ^1.0.2
+  fluttertoast: ^8.0.7
 
 dependency_overrides:
   intl: ^0.18.0
