@@ -180,7 +180,9 @@ class RegisterScreen extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(context),
-                  FormBuilderValidators.minLength(context, 5)
+                  FormBuilderValidators.minLength(context, 3),
+                  FormBuilderValidators.match(context, "^[a-zA-Z]{1,8}\$",
+                      errorText: "Name cannot include numbers.")
                 ]),
               ),
             ),
@@ -208,7 +210,9 @@ class RegisterScreen extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(context),
-                  FormBuilderValidators.minLength(context, 5)
+                  FormBuilderValidators.minLength(context, 3),
+                  FormBuilderValidators.match(context, "^[a-zA-Z]{1,8}\$",
+                      errorText: "Name cannot include numbers.")
                 ]),
               ),
             ),
