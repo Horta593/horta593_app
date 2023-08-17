@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:horta593app/model/pay_model.dart';
+import 'package:horta593app/screens/payment/bloc/payment_event.dart';
 import 'bloc/payment_bloc.dart';
 import '../../constants/global_variables.dart';
 import 'package:image_picker/image_picker.dart';
@@ -59,7 +61,7 @@ class _PaymentScreen extends State<PaymentScreen> {
   //   });
   // }
 
-  Widget _buildPaymentOrderDetail() {
+  Widget _buildPaymentOrderDetail(Pay pay) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start, // Added for left alignment
       children: [
@@ -488,11 +490,26 @@ class _PaymentScreen extends State<PaymentScreen> {
             // This Expanded widget makes sure that the ListView takes up all available space
             Expanded(
               child: BlocBuilder<PaymentBloc, PaymentState>(
-                builder: (context, state) => ListView(
-                  children: [_buildPaymentOrderDetail()],
-                ),
+                builder: (context, state) {
+                  if (state is PaymentReadyState) {
+                    return ListView(
+                      children: [_buildPaymentOrderDetail(state.newPay)],
+                    );
+                  }
+                  // You can add other conditional returns based on different states if needed.
+                  return const Center(
+                      child: Text("Waiting for payment details..."));
+                },
               ),
             ),
+
+            // Expanded(
+            //   child: BlocBuilder<PaymentBloc, PaymentState>(
+            //     builder: (context, state) => ListView(
+            //       children: [_buildPaymentOrderDetail()],
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(

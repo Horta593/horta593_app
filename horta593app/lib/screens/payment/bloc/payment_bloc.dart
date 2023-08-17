@@ -7,7 +7,10 @@ import 'package:horta593app/screens/payment/bloc/payment_event.dart';
 part 'payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
-  PaymentBloc() : super(PaymentInitial()) {
-    on<InitializePayment>((event, emit) {});
+  PaymentBloc() : super(PaymentInitialState()) {
+    on<InitializePaymentEvent>((event, emit) {
+      emit(PaymentLoadingState(newPay: event.pay));
+      emit(PaymentReadyState(newPay: event.pay));
+    });
   }
 }

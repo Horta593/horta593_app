@@ -117,14 +117,28 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // //cambiar con payment
-                    // cartBloc.add(AddItemEvent(
-                    //     CartItem(product: product, quantity: _counter)));
-                    CartItem item =
+                    CartItem currentItem =
                         CartItem(product: product, quantity: _counter);
                     print("hoomemenu");
-                    print(item);
-                    BlocProvider.of<CartBloc>(context).add(AddItem(item));
+                    print(currentItem);
+
+                    // bool itemExists = CartBloc().state.shoppingCart.any(
+                    //     (element) => element.product.id == item.product.id);
+                    // if (itemExists) {
+                    //   CartItem itm = CartBloc()
+                    //       .state
+                    //       .shoppingCart
+                    //       .where((element) =>
+                    //           element.product.id == item.product.id)
+                    //       .first;
+
+                    //   int newQty = _counter + itm.quantity;
+
+                    // CartItem newItem =
+                    //     CartItem(product: item.product, quantity: newQty);
+
+                    BlocProvider.of<CartBloc>(context)
+                        .add(AddItemEvent(currentItem));
                   },
                   child: const Text('Add cart'),
                 )

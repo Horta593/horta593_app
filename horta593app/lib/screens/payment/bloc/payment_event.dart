@@ -12,32 +12,32 @@ abstract class PaymentEvent extends Equatable {
 
 class PaymentInitialEvent extends PaymentEvent {}
 
-class InitializePayment extends PaymentEvent {
+class InitializePaymentEvent extends PaymentEvent {
   final Pay pay;
 
-  const InitializePayment({required this.pay});
+  const InitializePaymentEvent({required this.pay});
 
   @override
   List<Object?> get props => [pay];
 }
 
-class ConfirmPayment extends PaymentEvent {
+class ConfirmPaymentEvent extends PaymentEvent {
   final String paymentId;
 
-  const ConfirmPayment({required this.paymentId});
+  const ConfirmPaymentEvent({required this.paymentId});
 
   @override
   List<Object?> get props => [paymentId];
 }
 
-class CancelPayment extends PaymentEvent {}
+class CancelPaymentEvent extends PaymentEvent {}
 
-class RetryPayment extends PaymentEvent {}
+class RetryPaymentEvent extends PaymentEvent {}
 
-class UpdateShoppingCart extends PaymentEvent {
+class UpdateShoppingCartEvent extends PaymentEvent {
   final List<CartItem> newShoppingCart;
 
-  const UpdateShoppingCart({required this.newShoppingCart});
+  const UpdateShoppingCartEvent({required this.newShoppingCart});
 
   @override
   List<Object?> get props => [newShoppingCart];

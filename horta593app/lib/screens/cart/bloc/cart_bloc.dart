@@ -7,42 +7,48 @@ part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc() : super(CartEmpty()) {
-    on<AddItem>((event, emit) {
-      // Check if the item already exists in the cart
-      bool itemExists = state.items
-          .any((element) => element.product.id == event.item.product.id);
+  CartBloc() : super(CartEmptyState()) {
+    on<LoadItemCounter>((event, emit) {
+      emit(CartEmptyState());
+    });
 
-      if (!itemExists) {
-        List<CartItem> newList = [...state.items, event.item];
-        emit(CartLoaded(newList));
+    on<AddItemEvent>((event, emit) {
+      if (state is CartEmptyState) {
+        emit(CartLoadedState([event.currentItem]));
+      } else if (state is CartLoadedState) {
+        bool itemExists = state.shoppingCart.any(
+            (element) => element.product.id == event.currentItem.product.id);
+
+        if (!itemExists) {
+          emit(CartLoadedState(
+              List.from((state as CartLoadedState).shoppingCart)
+                ..add(event.currentItem)));
+        } else {
+          CartItem itm = state.shoppingCart
+              .where((element) =>
+                  element.product.id == event.currentItem.product.id)
+              .first;
+
+          int newQty = event.currentItem.quantity + itm.quantity;
+
+          CartItem newItem = CartItem(product: itm.product, quantity: newQty);
+
+          state.shoppingCart.add(newItem);
+
+          emit(CartLoadedState(
+              List.from((state as CartLoadedState).shoppingCart)..remove(itm)));
+        }
       }
     });
 
-    on<RemoveProduct>((event, emit) {
-      List<CartItem> updateItems = state.items
-          .where((element) => element.product.id != event.item.id)
-          .toList();
-      emit(CartItemRemoved(state.items, updateItems));
-    });
-
-    on<UpdateQuantity>((event, emit) {
-      // Create a copy of the current list of items in the cart
-      List<CartItem> updatedList = List.from(state.items);
-
-      // Find the index of the item to be updated in the copied list
-      int itemIndex = updatedList
-          .indexWhere((item) => item.product.id == event.item.product.id);
-
-      if (itemIndex != -1) {
-        // Update the quantity of the item at the specified index
-        updatedList[itemIndex] = event.item;
-      } else {
-        // If the item is not already in the list, add it
-        updatedList.add(event.item);
+    on<RemoveItemEvent>((event, emit) {
+      if (state is CartLoadedState) {
+        emit(CartLoadedState(List.from((state as CartLoadedState).shoppingCart)
+          ..remove(event.item)));
       }
-
-      emit(CartLoaded(updatedList)); // Emit the updated list
     });
+
+    //just in. case;
+    // on<ChangeQuantityEvent>((event, emit) {});
   }
 }

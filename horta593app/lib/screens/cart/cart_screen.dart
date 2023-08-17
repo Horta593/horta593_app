@@ -87,11 +87,11 @@ class _CartScreen extends State<CartScreen> {
                                         color: const Color.fromRGBO(
                                             212, 178, 36, 1.0),
                                         onPressed: () {
-                                          // Decrease quantity logic
-                                          // final cartBloc =
-                                          //     context.read<CartBloc>();
-                                          // cartBloc.add(UpdateQuantity(
-                                          //     items, items.quantity));
+                                          if (items.quantity > 1) {
+                                            setState(() {
+                                              items.quantity--;
+                                            });
+                                          }
                                         },
                                         icon: const Icon(Icons.remove),
                                       ),
@@ -106,7 +106,11 @@ class _CartScreen extends State<CartScreen> {
                                       child: IconButton(
                                         color: const Color.fromRGBO(
                                             212, 178, 36, 1.0),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          setState(() {
+                                            items.quantity++;
+                                          });
+                                        },
                                         icon: const Icon(Icons.add),
                                       ),
                                     ) //poner la cantidad
@@ -124,8 +128,9 @@ class _CartScreen extends State<CartScreen> {
                           color: Colors.white,
                           onPressed: () {
                             // Delete item logic
-                            final cartBloc = context.read<CartBloc>();
-                            cartBloc.add(RemoveProduct(items.product));
+
+                            BlocProvider.of<CartBloc>(context)
+                                .add(RemoveItemEvent(items));
                           },
                           icon: const Icon(Icons.close),
                         ),
@@ -147,54 +152,65 @@ class _CartScreen extends State<CartScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: state.items.map((e) => _buildCartCard(e)).toList(),
+        if (state is CartEmptyState) {
+          return const Center(
+            child: Text("Empty cart"),
+          );
+        }
+        if (state is CartLoadedState) {
+          return Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children:
+                      state.shoppingCart.map((e) => _buildCartCard(e)).toList(),
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: Color.fromRGBO(58, 65, 57, 1.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Subtotal: \$${calculateTotal(state.items).toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: Color.fromRGBO(58, 65, 57, 1.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Subtotal: \$${calculateTotal(state.shoppingCart).toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: GlobalVariables.greenHorta),
-                    onPressed: () {
-                      // Place order logic
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider<PaymentBloc>(
-                            create: (context) => PaymentBloc()
-                              ..add(InitializePayment(
-                                  pay: Pay(
-                                      name: "",
-                                      personalId: "",
-                                      email: "",
-                                      shoppingCart: state.items))),
-                            child: const PaymentScreen(),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: GlobalVariables.greenHorta),
+                      onPressed: () {
+                        // Place order logic
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider<PaymentBloc>(
+                              create: (context) => PaymentBloc()
+                                ..add(InitializePaymentEvent(
+                                    pay: Pay(
+                                        name: "",
+                                        personalId: "",
+                                        email: "",
+                                        shoppingCart: state.shoppingCart))),
+                              child: const PaymentScreen(),
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: const Text('Pagar'),
-                  ),
-                ],
+                        );
+                      },
+                      child: const Text('Pagar'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          );
+        }
+        return const Center(
+          child: Text("Empty cart"),
         );
       },
     );

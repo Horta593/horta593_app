@@ -1,20 +1,44 @@
 part of 'cart_bloc.dart';
 
-abstract class CartEvent {}
+abstract class CartEvent extends Equatable {
+  const CartEvent();
 
-class AddItem extends CartEvent {
+  @override
+  List<Object> get props => [];
+}
+
+class LoadItemCounter extends CartEvent {}
+
+class AddItemEvent extends CartEvent {
+  final CartItem currentItem;
+  const AddItemEvent(this.currentItem);
+
+  @override
+  List<Object> get props => [currentItem];
+}
+
+class RemoveItemEvent extends CartEvent {
   final CartItem item;
-  AddItem(this.item);
+
+  const RemoveItemEvent(this.item);
+
+  @override
+  List<Object> get props => [item];
 }
 
-class RemoveProduct extends CartEvent {
-  final Product item;
-  RemoveProduct(this.item);
-}
-
-class UpdateQuantity extends CartEvent {
+class ChangeQuantityEvent extends CartEvent {
   final CartItem item;
   final int newQuantity;
 
-  UpdateQuantity(this.item, this.newQuantity);
+  const ChangeQuantityEvent(this.item, this.newQuantity);
+
+  @override
+  List<Object> get props => [item, newQuantity];
+}
+
+class CartEmptyEvent extends CartEvent {
+  const CartEmptyEvent();
+
+  @override
+  List<Object> get props => [];
 }

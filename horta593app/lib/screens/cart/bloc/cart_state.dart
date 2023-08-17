@@ -1,28 +1,42 @@
 part of 'cart_bloc.dart';
 
-abstract class CartState {
-  final List<CartItem> items;
+abstract class CartState extends Equatable {
+  final List<CartItem> shoppingCart;
 
-  CartState({this.items = const []});
+  const CartState({this.shoppingCart = const []});
+
+  @override
+  List<Object> get props => [];
 }
 
-class CartEmpty extends CartState {
-  CartEmpty() : super(items: []);
+class CartEmptyState extends CartState {
+  @override
+  List<Object> get props => [];
 }
 
-class CartLoaded extends CartState {
-  final List<CartItem> newItems;
-  CartLoaded(this.newItems) : super(items: newItems);
+class CartLoadedState extends CartState {
+  final List<CartItem> shoppingCart;
+  const CartLoadedState(this.shoppingCart);
+  @override
+  List<Object> get props => [shoppingCart];
 }
 
-class CartItemRemoved extends CartState {
+//just in case!
+
+class CartItemRemovedState extends CartState {
   final List<CartItem> updatedItems;
 
-  CartItemRemoved(List<CartItem> items, this.updatedItems)
-      : super(items: updatedItems);
+  const CartItemRemovedState(List<CartItem> items, this.updatedItems)
+      : super(shoppingCart: updatedItems);
+
+  @override
+  List<Object> get props => [updatedItems];
 }
 
-class AddQuantityProduct extends CartState {
+class AddQuantityProductState extends CartState {
   final List<CartItem> newItems;
-  AddQuantityProduct(this.newItems) : super(items: newItems);
+  const AddQuantityProductState(this.newItems) : super(shoppingCart: newItems);
+
+  @override
+  List<Object> get props => [newItems];
 }
