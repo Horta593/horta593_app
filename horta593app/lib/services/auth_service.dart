@@ -88,7 +88,6 @@ class AuthService {
     required String password,
   }) async {
     String url = "${API.BASE_URL}${API.LOGIN_ENDPOINT}";
-    print(url);
     final response = await http.post(
       Uri.parse(url),
       headers: HelperService.buildHeaders(),
@@ -99,7 +98,6 @@ class AuthService {
         },
       ),
     );
-    print(response.statusCode);
     switch (response.statusCode) {
       case 200:
         final json = jsonDecode(response.body);

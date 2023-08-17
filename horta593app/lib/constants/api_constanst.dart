@@ -21,4 +21,10 @@ class API {
   //User
   //[GET]
   static const String ME_ENDPOINT = '/user/me';
+
+  //[GET]
+  static const String MELOCATION_ENDPOINT = '/user/me/location';
+
+  //[PATCH]
+  static const String CHANGELOCATION_ENDPOINT = '/user/{id}/address';
 }

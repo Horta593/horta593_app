@@ -29,7 +29,7 @@ class CategoryScreen extends StatelessWidget {
               ),
               child: (url != null)
                   ? Padding(
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

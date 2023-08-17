@@ -1,16 +1,14 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:horta593app/screens/map/bloc/location_bloc.dart';
 
 // ignore: must_be_immutable
 class MapSample extends StatefulWidget {
-  List<String> location;
-  MapSample({Key? key, required this.location}) : super(key: key);
+  const MapSample({Key? key}) : super(key: key);
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -18,34 +16,38 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   late GoogleMapController _controller;
-  late double lat;
-  late double long;
-  String locationMessage = 'Latitud: X, Longitud: Y';
-  late LatLng _center;
-  final Location _location = Location();
-  Set<Marker> _markers = {};
-  bool _mapCanDrag = true;
+  final LatLng _center = const LatLng(37.42976302006848, -122.0865985751152);
+  Set<Marker> _markers = Set<Marker>();
 
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
-    if (widget.location.isNotEmpty) {
-      _center =
-          LatLng(widget.location[0] as double, widget.location[1] as double);
-    } else {
-      _center = LatLng(37.42976302006848, -122.0865985751152);
-    }
-    _initLocation();
+
+    _setMarker(_center);
+  }
+
+  void _setMarker(LatLng point) {
+    setState(() {
+      _markers.add(Marker(markerId: const MarkerId("marker"), position: point));
+    });
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller = controller;
   }
 
   Future<Position> _getCurrentLocation() async {
-    bool serviceEnable = await Geolocator.isLocationServiceEnabled();
+    print("_getCurrentLocation");
+
+    bool serviceEnable;
+    LocationPermission permission;
+
+    serviceEnable = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnable) {
       return Future.error('Location services are disabled.');
     }
 
-    LocationPermission permission = await Geolocator.checkPermission();
+    permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
@@ -56,111 +58,162 @@ class MapSampleState extends State<MapSample> {
       return Future.error(
           "Location permissions are permanently denied, we cannot request.");
     }
-    return await Geolocator.getCurrentPosition();
-  }
-
-  // void _liveLocation() {
-  //   // LocationSettings locationSettings =
-  //   //     LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
-
-  //   Geolocator.getPositionStream(locationSettings: locationSettings)
-  //       .listen((Position position) {
-  //     lat = position.latitude;
-  //     long = position.longitude;
-
-  //     setState(() {
-  //       _center = LatLng(lat, long);
-  //       _markers.add(Marker(
-  //           markerId: MarkerId('current_location'),
-  //           position: _center,
-  //           draggable: true,
-  //           infoWindow: const InfoWindow(title: "Tu ubicacion"),
-  //           onDragStart: (position) {
-  //             _mapCanDrag = false;
-  //           },
-  //           onDragEnd: (newPosition) {
-  //             print(
-  //                 "Posicion: ${newPosition.latitude}, ${newPosition.longitude}");
-  //             setState(() {
-  //               lat = newPosition.latitude;
-  //               long = newPosition.longitude;
-  //               _center = LatLng(lat, long);
-  //               _mapCanDrag = true;
-  //             });
-  //           }));
-  //       locationMessage =
-  //           'Latitud: ${lat.toString()}, longitude: ${long.toString()}';
-  //     });
-  //   });
-  // }
-
-  Future<void> _initLocation() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
-
-    _serviceEnabled = await _location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationData = await _location.getLocation();
-
-    setState(() {
-      _center = LatLng(_locationData.latitude!, _locationData.longitude!);
-      _markers.add(Marker(
-          markerId: MarkerId('current_location'),
-          position: _center,
-          draggable: true,
-          infoWindow: const InfoWindow(title: "Tu ubicacion"),
-          onDragStart: (position) {
-            _mapCanDrag = false;
-          },
-          onDragEnd: (newPosition) {
-            setState(() {
-              print(
-                  "Posicion: ${newPosition.latitude}, ${newPosition.longitude}");
-              _center = newPosition;
-              _mapCanDrag = true;
-            });
-          }));
-    });
+    Position position = await Geolocator.getCurrentPosition();
+    return position;
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => LocationBloc()..add(const LocationRequestEvent()),
+      child: BlocBuilder<LocationBloc, LocationState>(
+        builder: (context, state) {
+          if (state is LocationSuccesState) {
+            return _bodyExistsLocation(context, state);
+          }
+          if (state is LocationEmptyState) {
+            return _bodyWithOutLocation(context);
+          }
+
+          if (state is LocationUpdatedSuccesState) {
+            return _bodyLoadingLocation(context, state);
+          }
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.red,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _bodyWithOutLocation(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(title: const Text('Selecciona tu ubicacion')),
-      body: GoogleMap(
-        onMapCreated: (GoogleMapController controller) {
-          _controller = controller;
-        },
-        markers: _markers,
-        initialCameraPosition: CameraPosition(
-          target: _center,
-          zoom: 15.0,
-        ),
-        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-          Factory<OneSequenceGestureRecognizer>(
-            () => _mapCanDrag
-                ? ScaleGestureRecognizer()
-                : EagerGestureRecognizer(),
-          ),
-        },
-        //   ),
-      ),
-    ));
+            appBar: AppBar(title: const Text('Selecciona tu ubicacion')),
+            body: GoogleMap(
+                mapType: MapType.normal,
+                markers: _markers,
+                zoomControlsEnabled: false,
+                onMapCreated: _onMapCreated,
+                initialCameraPosition:
+                    CameraPosition(target: _center, zoom: 11.0)),
+            floatingActionButton: FloatingActionButton.extended(
+              backgroundColor: Colors.red,
+              onPressed: () async {
+                Position position = await _getCurrentLocation();
+                print("Position ");
+                print(position);
+                bool confirmChange = await _onBackButtonPressed(
+                    context,
+                    "Location",
+                    "We will update your address. Are you sure to change it?");
+                _updateLocation(context, confirmChange, position);
+              },
+              label: const Text("Ups! Update your location."),
+              icon: const Icon(Icons.location_history),
+            )));
+  }
+
+  Widget _bodyLoadingLocation(
+      BuildContext context, LocationUpdatedSuccesState state) {
+    double lat = state.pos.latitude;
+    double long = state.pos.longitude;
+
+    return SafeArea(
+        child: Scaffold(
+            appBar: AppBar(title: const Text('Selecciona tu ubicacion')),
+            body: GoogleMap(
+                mapType: MapType.normal,
+                markers: _markers,
+                zoomControlsEnabled: false,
+                onMapCreated: _onMapCreated,
+                initialCameraPosition:
+                    CameraPosition(target: LatLng(lat, long), zoom: 11.0)),
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () async {
+                // setState(() {
+                //   _center = LatLng(,);
+                // });
+                // Position position = await _getCurrentLocation();
+                // bool confirmChange =
+                //     await _onBackButtonPressed(context, "", "");
+                // _updateLocation(context, confirmChange, position);
+              },
+              label: const Text("Your Location"),
+              icon: const Icon(Icons.location_history),
+            )));
+  }
+
+  Widget _bodyExistsLocation(BuildContext context, LocationSuccesState state) {
+    double lat = double.parse(state.position.latitude);
+    double long = double.parse(state.position.longitude);
+    return SafeArea(
+        child: Scaffold(
+            appBar: AppBar(title: const Text('Tu ubicacion')),
+            body: GoogleMap(
+                mapType: MapType.normal,
+                markers: _markers,
+                zoomControlsEnabled: false,
+                onMapCreated: _onMapCreated,
+                initialCameraPosition:
+                    CameraPosition(target: LatLng(lat, long), zoom: 11.0)),
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () async {
+                Position position = await _getCurrentLocation();
+                bool confirmChange = await _onBackButtonPressed(context,
+                    "Update Location", "Are you want to change your address?");
+                _updateLocation(context, confirmChange, position);
+              },
+              label: const Text("Your Location"),
+              icon: const Icon(Icons.location_history),
+            )));
+  }
+
+  _onBackButtonPressed(BuildContext context, String title, String text) async {
+    bool confirm = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(text),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: const Text("YES")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: const Text("NO"))
+            ],
+          );
+        });
+
+    return confirm ?? false;
+  }
+
+  void _updateLocation(
+      BuildContext context, bool confirmChange, Position position) {
+    if (confirmChange) {
+      _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+          target: LatLng(position.latitude, position.longitude), zoom: 11)));
+
+      _markers.clear();
+
+      print(position.latitude);
+      print(position.longitude);
+      _markers.add(Marker(
+          markerId: const MarkerId('currentLocation'),
+          position: LatLng(position.latitude, position.longitude)));
+
+      context.read<LocationBloc>().add(UpdatedLocationUserEvent(position, ""));
+      setState(() {});
+    } else {
+      print('No cambio!');
+    }
   }
 }

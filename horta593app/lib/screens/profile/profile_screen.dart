@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:horta593app/screens/map/bloc/location_bloc.dart';
 import 'package:horta593app/screens/profile/bloc/profile_bloc.dart';
+import 'package:horta593app/widgets/custom_button.dart';
 
 import '../../constants/global_variables.dart';
+import '../login/login_screen.dart';
 import '../map/googlemap_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
+  static const String routeName = '/route-profile';
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -36,7 +40,16 @@ class ProfileScreen extends StatelessWidget {
                           children: [
                             _miDireccion(context, state),
                             _misOrdenes(context),
-                            _ayuda(context)
+                            _ayuda(context),
+                            Padding(
+                              padding: EdgeInsets.only(top: 20),
+                              child: CustomButton(
+                                  text: "Log out",
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, LoginScreen.routeName);
+                                  }),
+                            )
                           ],
                         ),
                       )
@@ -150,9 +163,7 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        MapSample(location: state.user.getLocation())),
+                MaterialPageRoute(builder: (context) => MapSample()),
               );
             },
             style: TextButton.styleFrom(
@@ -166,7 +177,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
