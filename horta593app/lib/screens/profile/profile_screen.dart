@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:horta593app/screens/map/bloc/location_bloc.dart';
 import 'package:horta593app/screens/profile/bloc/profile_bloc.dart';
 import 'package:horta593app/widgets/custom_button.dart';
 
@@ -42,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
                             _misOrdenes(context),
                             _ayuda(context),
                             Padding(
-                              padding: EdgeInsets.only(top: 20),
+                              padding: const EdgeInsets.only(top: 20),
                               child: CustomButton(
                                   text: "Log out",
                                   onTap: () {
@@ -78,20 +77,22 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _email(String email) {
     return Padding(
-      padding: EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(top: 5),
       child: Text(
         email,
-        style: TextStyle(fontSize: 15, color: GlobalVariables.whiteletter),
+        style:
+            const TextStyle(fontSize: 15, color: GlobalVariables.whiteletter),
       ),
     );
   }
 
   Widget _name(String name) {
     return Padding(
-      padding: EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(top: 5),
       child: Text(
         name,
-        style: TextStyle(fontSize: 18, color: GlobalVariables.whiteletter),
+        style:
+            const TextStyle(fontSize: 18, color: GlobalVariables.whiteletter),
       ),
     );
   }
@@ -163,7 +164,7 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MapSample()),
+                MaterialPageRoute(builder: (context) => const MapSample()),
               );
             },
             style: TextButton.styleFrom(
