@@ -44,7 +44,6 @@ class LoginScreen extends StatelessWidget {
             listener: (context, state) {
               if (state is LoginSuccessState) {
                 context.read<AuthBloc>().add(AuthAuthenticateEvent(state.user));
-
                 Navigator.pushNamed(context, BaseScreen.routeName);
               }
             },
@@ -186,7 +185,7 @@ class LoginScreen extends StatelessWidget {
                   }
                 },
                 child: const SizedBox(
-                  width: 280,
+                  width: 260,
                   child: Text(
                     'Login',
                     textAlign: TextAlign.center,
@@ -205,7 +204,7 @@ class LoginScreen extends StatelessWidget {
                   );
                 },
                 child: const SizedBox(
-                  width: 280,
+                  width: 260,
                   child: Text(
                     'Sign Up',
                     textAlign: TextAlign.center,

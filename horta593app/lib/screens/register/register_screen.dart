@@ -66,6 +66,7 @@ class RegisterScreen extends StatelessWidget {
                         ],
                       ),
                     )));
+
                 Navigator.pushNamed(context, LoginScreen.routeName);
               }
             },
@@ -128,6 +129,17 @@ class RegisterScreen extends StatelessWidget {
               }
               return Container();
             }),
+            Align(
+                alignment: Alignment.topLeft,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, LoginScreen.routeName);
+                  },
+                  child: const Icon(
+                    Icons.arrow_back,
+                    color: GlobalVariables.whiteletter,
+                  ),
+                )),
             const Image(
                 width: 300,
                 height: 300,
@@ -274,7 +286,7 @@ class RegisterScreen extends StatelessWidget {
                   }
                 },
                 child: const SizedBox(
-                  width: 280,
+                  width: 270,
                   child: Text(
                     'Register',
                     textAlign: TextAlign.center,

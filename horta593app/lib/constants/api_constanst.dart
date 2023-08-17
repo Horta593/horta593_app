@@ -1,6 +1,5 @@
 class API {
-
-static const String BASE_URL = "http://44.212.161.237:3000";
+  static const String BASE_URL = "http://44.212.161.237:3000";
 
   //Authentication
   //[POST]
@@ -21,4 +20,10 @@ static const String BASE_URL = "http://44.212.161.237:3000";
   //User
   //[GET]
   static const String ME_ENDPOINT = '/user/me';
+
+  //[GET]
+  static const String MELOCATION_ENDPOINT = '/user/me/location';
+
+  //[PATCH]
+  static const String CHANGELOCATION_ENDPOINT = '/user/{id}/address';
 }
