@@ -6,6 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:horta593app/screens/home/base_screen.dart';
 import 'package:horta593app/screens/map/bloc/location_bloc.dart';
 import 'package:horta593app/widgets/custom_button.dart';
 import 'package:horta593app/widgets/text_title.dart';
@@ -24,7 +25,7 @@ class MapSampleState extends State<MapSample> {
   late GoogleMapController _controller;
   final LatLng _center = const LatLng(37.42976302006848, -122.0865985751152);
   Set<Marker> _markers = Set<Marker>();
-  String info = "";
+  String nameValue = "HOME";
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -94,12 +95,6 @@ class MapSampleState extends State<MapSample> {
         },
       ),
     );
-  }
-
-  void _insertInfo() {
-    setState(() {
-      info = "Information has been inserted!";
-    });
   }
 
   Widget _bodyWithOutLocation(BuildContext context) {
@@ -225,17 +220,13 @@ class MapSampleState extends State<MapSample> {
           markerId: const MarkerId('currentLocation'),
           position: LatLng(position.latitude, position.longitude)));
 
-      _showBottomSheet(context);
-      context.read<LocationBloc>().add(UpdatedLocationUserEvent(position, ""));
-      setState(() {});
+      _showBottomSheet(context, position);
     } else {
       print('No cambio!');
     }
   }
 
-  void _showBottomSheet(BuildContext context) {
-    int _counter = 0;
-
+  void _showBottomSheet(BuildContext context, Position position) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -282,9 +273,18 @@ class MapSampleState extends State<MapSample> {
                                   onTap: () {
                                     if (_formKey.currentState!
                                         .saveAndValidate()) {
-                                      var nameValue =
-                                          _formKey.currentState!.value['name'];
-                                      print(nameValue);
+                                      setState(() {
+                                        nameValue = _formKey.currentState!
+                                            .value['location name'];
+
+                                        context.read<LocationBloc>().add(
+                                            UpdatedLocationUserEvent(
+                                                position, nameValue));
+                                        setState(() {});
+                                        firstScreenKey.currentState
+                                            ?.changeValue(nameValue);
+                                        Navigator.pop(context);
+                                      });
                                     }
                                   })
                             ],
