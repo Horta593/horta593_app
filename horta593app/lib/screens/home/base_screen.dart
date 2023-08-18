@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/constants/global_variables.dart';
+import 'package:horta593app/screens/tracking/tracking_screen.dart';
 
 import '../../services/profile_service.dart';
 import '../homeMenu/bloc/product_bloc.dart';
@@ -11,8 +12,9 @@ import '../profile/profile_screen.dart';
 final GlobalKey<_BaseScreenState> firstScreenKey = GlobalKey();
 
 class BaseScreen extends StatefulWidget {
+  final Function(int)? onScreenChange;
   static const String routeName = 'base-screen/';
-  const BaseScreen({Key? key}) : super(key: key);
+  const BaseScreen({Key? key, this.onScreenChange}) : super(key: key);
 
   @override
   State<BaseScreen> createState() => _BaseScreenState();
@@ -24,7 +26,7 @@ class _BaseScreenState extends State<BaseScreen> {
   static final List<Widget> widgetOptions = <Widget>[
     const MenuScreen(),
     const CartScreen(),
-    const Text("Premios"),
+    TrackingScreen(),
     const ProfileScreen(),
   ];
 
@@ -108,7 +110,7 @@ class _BaseScreenState extends State<BaseScreen> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_cart), label: "Carrito"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.card_giftcard_outlined), label: "Premios"),
+                icon: Icon(Icons.payment), label: "Payment"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.person_outline), label: "Perfil")
           ]),

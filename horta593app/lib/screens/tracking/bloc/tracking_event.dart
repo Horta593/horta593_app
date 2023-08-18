@@ -4,7 +4,12 @@ part of 'tracking_bloc.dart';
 class TrackingEvent extends Equatable {
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
-class TrackingInitialEvent extends TrackingEvent {}
+class TrackingInitialEvent extends TrackingEvent {
+  String orderID;
+  TrackingInitialEvent(this.orderID);
+  @override
+  List<Object?> get props => [orderID];
+}

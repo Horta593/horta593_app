@@ -19,8 +19,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           email: event.email,
           password: event.password,
         );
-        print("await user");
-        print(await user);
+
         emit(RegisterSuccessState(user));
       } on FormGeneralException catch (e) {
         emit(RegisterErrorState(e));

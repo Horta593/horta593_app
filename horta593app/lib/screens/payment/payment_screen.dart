@@ -11,6 +11,7 @@ import 'package:horta593app/screens/tracking/bloc/tracking_bloc.dart';
 import 'package:horta593app/screens/tracking/tracking_screen.dart';
 import 'package:horta593app/widgets/text_normal.dart';
 import '../../widgets/text_title.dart';
+import '../home/base_screen.dart';
 import 'bloc/payment_bloc.dart';
 import '../../constants/global_variables.dart';
 import 'package:image_picker/image_picker.dart';
@@ -438,7 +439,6 @@ class _PaymentScreen extends State<PaymentScreen> {
         ),
         body: Column(
           children: [
-            // This Expanded widget makes sure that the ListView takes up all available space
             Expanded(
               child: BlocBuilder<PaymentBloc, PaymentState>(
                 builder: (context, state) {
@@ -450,12 +450,11 @@ class _PaymentScreen extends State<PaymentScreen> {
                       ],
                     );
                   }
-                  // You can add other conditional returns based on different states if needed.
                   return const Center(
                       child: Text("Waiting for payment details..."));
                 },
               ),
-            ),
+            )
           ],
         ));
   }
@@ -465,20 +464,13 @@ class _PaymentScreen extends State<PaymentScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           onPressed: () {
-            if (_formKey.currentState!.saveAndValidate()) {
-              //todo:
-              //enviar el id de la orden en el initial event, pasar el id del carrito del payment al tracking
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider<TrackingBloc>(
-                    create: (context) =>
-                        TrackingBloc()..add(TrackingInitialEvent()),
-                    child: TrackingScreen(),
-                  ),
-                ),
-              );
-            }
+            // if (_formKey.currentState!.saveAndValidate()) {
+            context
+                .read<TrackingBloc>()
+                .add(TrackingInitialEvent(state.idOrder));
+
+            Navigator.pop(context);
+            // }
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(

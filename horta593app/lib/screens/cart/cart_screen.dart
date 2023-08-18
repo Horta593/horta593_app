@@ -5,6 +5,7 @@ import 'package:horta593app/screens/payment/bloc/payment_bloc.dart';
 import 'package:horta593app/screens/payment/bloc/payment_event.dart';
 import '../../model/cart_item_model.dart';
 import '../payment/payment_screen.dart';
+import '../tracking/bloc/tracking_bloc.dart';
 import 'bloc/cart_bloc.dart';
 import '../../constants/global_variables.dart';
 import '../../model/product_model.dart';
@@ -202,12 +203,22 @@ class _CartScreen extends State<CartScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BlocProvider<PaymentBloc>(
-                              create: (context) => PaymentBloc()
-                                ..add(InitializePaymentEvent(
-                                    shoppingCart: state.shoppingCart,
-                                    subTotal: subTotalValue,
-                                    total: totalValue)),
+                            builder: (context) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider<PaymentBloc>(
+                                  create: (context) => PaymentBloc()
+                                    ..add(
+                                      InitializePaymentEvent(
+                                        shoppingCart: state.shoppingCart,
+                                        subTotal: subTotalValue,
+                                        total: totalValue,
+                                      ),
+                                    ),
+                                ),
+                                BlocProvider<TrackingBloc>(
+                                  create: (context) => TrackingBloc(),
+                                ),
+                              ],
                               child: const PaymentScreen(),
                             ),
                           ),

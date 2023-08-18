@@ -8,7 +8,6 @@ part 'tracking_state.dart';
 class TrackingBloc extends Bloc<TrackingEvent, TrackingState> {
   TrackingBloc() : super(TrackingInitialState()) {
     on<TrackingInitialEvent>((event, emit) async {
-      // event.atributo  (atributo del evento)
       // payment:confirmacion de pago
       // llamar funcion de request /payment : idPayment receive
       // payment-upload  form data, como enviar formdata como un body del enpoint, genera el id del payment

@@ -30,4 +30,7 @@ class API {
   //Order
   //[POST]
   static const String ORDER_ENDPOINT = '/order';
+
+  //[POST]
+  static const String PAYMENT_ENDPOINT = '/payment';
 }
