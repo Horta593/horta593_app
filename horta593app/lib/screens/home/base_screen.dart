@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/constants/global_variables.dart';
+import 'package:horta593app/screens/order/bloc/order_bloc.dart';
+import 'package:horta593app/screens/order/order_screen.dart';
 
 import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
@@ -21,7 +23,7 @@ class _BaseScreenState extends State<BaseScreen> {
   static final List<Widget> widgetOptions = <Widget>[
     const MenuScreen(),
     const CartScreen(),
-    const Text("Premios"),
+    const OrderScreen(),
     const ProfileScreen(),
   ];
   void _onItemsTapped(int index) {
@@ -68,6 +70,9 @@ class _BaseScreenState extends State<BaseScreen> {
         providers: [
           BlocProvider<ProductBloc>(
             create: (context) => ProductBloc(),
+          ),
+          BlocProvider<OrderBloc>(
+            create: (context) => OrderBloc(),
           ),
         ],
         child: widgetOptions[selectIndex],

@@ -7,7 +7,6 @@ import '../../model/cart_item_model.dart';
 import '../payment/payment_screen.dart';
 import 'bloc/cart_bloc.dart';
 import '../../constants/global_variables.dart';
-import '../../model/product_model.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -210,7 +209,14 @@ class _CartScreen extends State<CartScreen> {
           );
         }
         return const Center(
-          child: Text("Empty cart"),
+          child: Text(
+            "Empty cart",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
         );
       },
     );

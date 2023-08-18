@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/model/pay_model.dart';
+import 'package:horta593app/screens/category/bloc/categories_bloc.dart';
+import 'package:horta593app/screens/order/bloc/order_bloc.dart';
+import 'package:horta593app/screens/order/order_screen.dart';
 import 'package:horta593app/screens/payment/bloc/payment_event.dart';
 import 'bloc/payment_bloc.dart';
 import '../../constants/global_variables.dart';
@@ -503,19 +506,10 @@ class _PaymentScreen extends State<PaymentScreen> {
               ),
             ),
 
-            // Expanded(
-            //   child: BlocBuilder<PaymentBloc, PaymentState>(
-            //     builder: (context, state) => ListView(
-            //       children: [_buildPaymentOrderDetail()],
-            //     ),
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
-                onPressed: () {
-                  // Implement your payment functionality here
-                },
+                onPressed: () {},
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
                     GlobalVariables.secondaryColor,
