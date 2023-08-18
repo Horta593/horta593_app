@@ -2,9 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:horta593app/screens/home/base_screen.dart';
 import 'package:horta593app/screens/map/bloc/location_bloc.dart';
+import 'package:horta593app/widgets/custom_button.dart';
+import 'package:horta593app/widgets/text_title.dart';
+
+import '../../constants/global_variables.dart';
 
 // ignore: must_be_immutable
 class MapSample extends StatefulWidget {
@@ -18,6 +25,8 @@ class MapSampleState extends State<MapSample> {
   late GoogleMapController _controller;
   final LatLng _center = const LatLng(37.42976302006848, -122.0865985751152);
   Set<Marker> _markers = Set<Marker>();
+  String nameValue = "HOME";
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
@@ -103,12 +112,12 @@ class MapSampleState extends State<MapSample> {
               backgroundColor: Colors.red,
               onPressed: () async {
                 Position position = await _getCurrentLocation();
-                print("Position ");
-                print(position);
+
                 bool confirmChange = await _onBackButtonPressed(
                     context,
                     "Location",
                     "We will update your address. Are you sure to change it?");
+
                 _updateLocation(context, confirmChange, position);
               },
               label: const Text("Ups! Update your location."),
@@ -154,7 +163,11 @@ class MapSampleState extends State<MapSample> {
             appBar: AppBar(title: const Text('Tu ubicacion')),
             body: GoogleMap(
                 mapType: MapType.normal,
-                markers: _markers,
+                markers: <Marker>{
+                  Marker(
+                      markerId: MarkerId("You are here"),
+                      position: LatLng(lat, long))
+                },
                 zoomControlsEnabled: false,
                 onMapCreated: _onMapCreated,
                 initialCameraPosition:
@@ -203,17 +216,83 @@ class MapSampleState extends State<MapSample> {
           target: LatLng(position.latitude, position.longitude), zoom: 11)));
 
       _markers.clear();
-
-      print(position.latitude);
-      print(position.longitude);
       _markers.add(Marker(
           markerId: const MarkerId('currentLocation'),
           position: LatLng(position.latitude, position.longitude)));
 
-      context.read<LocationBloc>().add(UpdatedLocationUserEvent(position, ""));
-      setState(() {});
+      _showBottomSheet(context, position);
     } else {
       print('No cambio!');
     }
+  }
+
+  void _showBottomSheet(BuildContext context, Position position) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext con3ext) {
+        return Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: FractionallySizedBox(
+                heightFactor: 0.2,
+                child: Container(
+                    decoration: const BoxDecoration(
+                      color: GlobalVariables.primarybackground,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 20, left: 15, right: 15),
+                          child: Column(
+                            children: [
+                              TitleCustom(title: "Name your Location"),
+                              FormBuilder(
+                                  key: _formKey,
+                                  child: FormBuilderTextField(
+                                      style: const TextStyle(
+                                          color:
+                                              GlobalVariables.whitebackgound),
+                                      name: 'location name',
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(context),
+                                        FormBuilderValidators.minLength(
+                                            context, 3),
+                                        FormBuilderValidators.match(
+                                            context, "^[a-zA-Z]{1,8}\$",
+                                            errorText:
+                                                "Name cannot include numbers."),
+                                      ]))),
+                              CustomButton(
+                                  text: "Name your Location",
+                                  onTap: () {
+                                    if (_formKey.currentState!
+                                        .saveAndValidate()) {
+                                      setState(() {
+                                        nameValue = _formKey.currentState!
+                                            .value['location name'];
+
+                                        context.read<LocationBloc>().add(
+                                            UpdatedLocationUserEvent(
+                                                position, nameValue));
+                                        setState(() {});
+                                        firstScreenKey.currentState
+                                            ?.changeValue(nameValue);
+                                        Navigator.pop(context);
+                                      });
+                                    }
+                                  })
+                            ],
+                          ),
+                        )
+                      ],
+                    ))));
+      },
+    );
   }
 }

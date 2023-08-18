@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:horta593app/constants/global_variables.dart';
 
+import '../../services/profile_service.dart';
 import '../homeMenu/bloc/product_bloc.dart';
 import '../homeMenu/homemenu_screen.dart';
 import '../cart/cart_screen.dart';
 import '../profile/profile_screen.dart';
+
+final GlobalKey<_BaseScreenState> firstScreenKey = GlobalKey();
 
 class BaseScreen extends StatefulWidget {
   static const String routeName = 'base-screen/';
@@ -17,12 +20,35 @@ class BaseScreen extends StatefulWidget {
 
 class _BaseScreenState extends State<BaseScreen> {
   int selectIndex = 0;
+  String currentNameLocation = '-';
   static final List<Widget> widgetOptions = <Widget>[
     const MenuScreen(),
     const CartScreen(),
     const Text("Premios"),
     const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
+
+  _getLocation() async {
+    final location = await ProfileService.getMeLocation();
+    if (location.exists()) {
+      setState(() {
+        currentNameLocation = location.address;
+      });
+    }
+  }
+
+  void changeValue(String newAdress) {
+    setState(() {
+      currentNameLocation = newAdress;
+    });
+  }
+
   void _onItemsTapped(int index) {
     setState(() {
       selectIndex = index;
@@ -41,22 +67,22 @@ class _BaseScreenState extends State<BaseScreen> {
           color: GlobalVariables.secondaryColor,
           size: 40.0,
         ),
-        title: const Column(
+        title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Casa",
-              style: TextStyle(
+              currentNameLocation,
+              style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                   fontFamily: "Lato"),
             ),
-            Text(
-              "Av. Francisco de Orellana 562",
+            const Text(
+              "You are Here",
               style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 14,
+                  fontSize: 10,
                   fontFamily: "Lato"),
             )
           ],
