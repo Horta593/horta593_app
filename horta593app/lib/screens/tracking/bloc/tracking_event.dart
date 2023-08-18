@@ -16,3 +16,5 @@ class TrackingInitialEvent extends TrackingEvent {
   @override
   List<Object?> get props => [orderID, name, nationalID];
 }
+
+class TrackingPaymentlEvent extends TrackingEvent {}

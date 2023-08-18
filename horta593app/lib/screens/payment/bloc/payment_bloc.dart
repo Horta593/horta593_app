@@ -13,6 +13,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
           idOrder: id_, subtotal: event.subTotal, total: event.total));
       print("PaymentReadyState");
       // emit(PaymentLoadingState(newPay: event.pay));
+
       // emit(PaymentReadyState(newPay: event.pay));
     });
   }

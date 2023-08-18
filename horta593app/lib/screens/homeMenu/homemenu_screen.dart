@@ -141,8 +141,6 @@ class _MenuScreenState extends State<MenuScreen> {
                             onPressed: () {
                               CartItem currentItem = CartItem(
                                   product: product, quantity: _counter);
-                              print("hoomemenu");
-                              print(currentItem);
                               BlocProvider.of<CartBloc>(context)
                                   .add(AddItemEvent(currentItem));
                               Navigator.pop(context);

@@ -367,8 +367,9 @@ class _PaymentScreen extends State<PaymentScreen> {
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(context),
                         FormBuilderValidators.minLength(context, 3),
-                        FormBuilderValidators.match(context, "^[a-zA-Z]{1,8}\$",
-                            errorText: "Must be letters")
+                        FormBuilderValidators.match(
+                            context, "^^[a-zA-Z]+ [a-zA-Z]+\$",
+                            errorText: "At least one name and lastname")
                       ])),
                   const SizedBox(height: 8),
                   NormalText(text: "National ID"),
@@ -450,7 +451,9 @@ class _PaymentScreen extends State<PaymentScreen> {
                     );
                   }
                   return const Center(
-                      child: Text("Waiting for payment details..."));
+                      child: Text("Waiting for payment details...",
+                          style:
+                              TextStyle(color: GlobalVariables.whiteletter)));
                 },
               ),
             )
@@ -459,16 +462,16 @@ class _PaymentScreen extends State<PaymentScreen> {
   }
 
   Widget _confirmPayment(BuildContext context, PaymentReadyState state) {
+    print("_confirmPayment");
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.saveAndValidate()) {
-              context.read<TrackingBloc>().add(TrackingInitialEvent(
+              BlocProvider.of<TrackingBloc>(context).add(TrackingInitialEvent(
                   state.idOrder,
                   _formKey.currentState!.value['name'],
-                  _formKey.currentState!.value['email']));
-
+                  _formKey.currentState!.value['nationalid']));
               Navigator.pop(context);
             }
           },

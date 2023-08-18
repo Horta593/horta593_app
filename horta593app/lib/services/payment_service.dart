@@ -66,8 +66,6 @@ class PaymentService {
 
   static Future<String> confirmPayment(
       String idorder, String name, String nationalID) async {
-    User user_response = await ProfileService.getProfileInfo();
-
     String url = "${API.BASE_URL}${API.PAYMENT_ENDPOINT}";
     User user = await loadUser();
     String token = user.accessToken;
@@ -75,13 +73,12 @@ class PaymentService {
     final response = await http.post(Uri.parse(url),
         body: jsonEncode({
           'orderId': idorder,
-          'firstname': name.split(" ")[0],
-          'lastname': name.split(" ")[1]
+          'firstName': name.split(" ")[0],
+          'lastName': name.split(" ")[1],
+          'nationalId': nationalID
         }),
         headers: HelperService.buildHeaders(accessToken: token));
-    print("response");
-    print(response.statusCode);
-    print(response.body);
+
     switch (response.statusCode) {
       case 201:
         final result = jsonDecode(response.body);
@@ -97,5 +94,29 @@ class PaymentService {
     }
   }
 
-  // static Future<String> uploadPayment(String idorderD) async {}
+  static Future<String> uploadPayment(String idorderD) async {
+    // User user_response = await ProfileService.getProfileInfo();
+
+    String url = "${API.BASE_URL}${API.PAYMENT_ENDPOINT}";
+    User user = await loadUser();
+    String token = user.accessToken;
+
+    final response = await http.post(Uri.parse(url),
+        body: jsonEncode({}),
+        headers: HelperService.buildHeaders(accessToken: token));
+
+    switch (response.statusCode) {
+      case 201:
+        final result = jsonDecode(response.body);
+        final String id = result['id'];
+        return id;
+      case 400:
+        final json = jsonDecode(response.body);
+        throw handleFormErrors(json);
+      case 300:
+      case 500:
+      default:
+        throw FormGeneralException(message: 'Error contacting the server!');
+    }
+  }
 }

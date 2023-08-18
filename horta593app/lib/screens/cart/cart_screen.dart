@@ -215,9 +215,6 @@ class _CartScreen extends State<CartScreen> {
                                       ),
                                     ),
                                 ),
-                                BlocProvider<TrackingBloc>(
-                                  create: (context) => TrackingBloc(),
-                                ),
                               ],
                               child: const PaymentScreen(),
                             ),
