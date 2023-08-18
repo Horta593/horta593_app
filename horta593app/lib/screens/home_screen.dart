@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 100),
             Builder(builder: (context) {
               return CustomButton(
-                  text: "Empezar",
+                  text: "Start",
                   onTap: () {
                     Navigator.pushNamed(context, LoginScreen.routeName);
                   });

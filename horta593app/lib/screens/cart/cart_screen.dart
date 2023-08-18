@@ -17,11 +17,21 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreen extends State<CartScreen> {
-  double calculateTotal(List<CartItem> items) {
-    double total = 0.0;
+  double iva = 0.12;
+  double service = 3.0;
+
+  double calculateSubtTotal(List<CartItem> items) {
+    double subtotal = 0.0;
     for (var item in items) {
-      total += double.parse(item.product.price) * item.quantity;
+      subtotal += double.parse(item.product.price) * item.quantity;
     }
+    return subtotal;
+  }
+
+  double calculateTotal(double subTotal) {
+    double total = 0.0;
+    double res = (subTotal * iva);
+    total = subTotal + res + service;
     return total;
   }
 
@@ -173,7 +183,7 @@ class _CartScreen extends State<CartScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Subtotal: \$${calculateTotal(state.shoppingCart).toStringAsFixed(2)}',
+                      'Subtotal: \$${calculateSubtTotal(state.shoppingCart).toStringAsFixed(2)}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -184,18 +194,20 @@ class _CartScreen extends State<CartScreen> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: GlobalVariables.greenHorta),
                       onPressed: () {
-                        // Place order logic
+                        //llamar a funciones que te generen los valores de: total, subtotal, iva
+                        double subTotalValue =
+                            calculateSubtTotal(state.shoppingCart);
+                        double totalValue = calculateTotal(subTotalValue);
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => BlocProvider<PaymentBloc>(
                               create: (context) => PaymentBloc()
                                 ..add(InitializePaymentEvent(
-                                    pay: Pay(
-                                        name: "",
-                                        personalId: "",
-                                        email: "",
-                                        shoppingCart: state.shoppingCart))),
+                                    shoppingCart: state.shoppingCart,
+                                    subTotal: subTotalValue,
+                                    total: totalValue)),
                               child: const PaymentScreen(),
                             ),
                           ),

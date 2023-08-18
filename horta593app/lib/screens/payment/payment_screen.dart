@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horta593app/model/pay_model.dart';
 import 'package:horta593app/screens/payment/bloc/payment_event.dart';
+import 'package:horta593app/widgets/text_normal.dart';
+import '../../widgets/text_title.dart';
 import 'bloc/payment_bloc.dart';
 import '../../constants/global_variables.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,7 +21,7 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreen extends State<PaymentScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
 
@@ -49,18 +53,16 @@ class _PaymentScreen extends State<PaymentScreen> {
     }
   }
 
-  // Future<void> _pickImage() async {
-  //   final ImagePicker _picker = ImagePicker();
-  //   XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  double iva = 0.12;
+  double service = 3.0;
+  double calculateTotal(double subTotal) {
+    double total = 0.0;
+    double res = (subTotal * iva);
+    total = subTotal + res + service;
+    return total;
+  }
 
-  //   // PickedFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-  //   setState(() {
-  //     _imageFile = image as PickedFile?;
-  //   });
-  // }
-
-  Widget _buildPaymentOrderDetail(Pay pay) {
+  Widget _buildPaymentOrderDetail(double subtotal, double total) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start, // Added for left alignment
       children: [
@@ -68,7 +70,7 @@ class _PaymentScreen extends State<PaymentScreen> {
           padding: EdgeInsets.all(8.0),
           child: Center(
             child: Text(
-              "Tu Orden",
+              "Your Order",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -82,7 +84,7 @@ class _PaymentScreen extends State<PaymentScreen> {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            "Detalle de orden",
+            "Order Detail",
             style: TextStyle(
               color: GlobalVariables.greenHorta,
               fontSize: 20,
@@ -103,13 +105,13 @@ class _PaymentScreen extends State<PaymentScreen> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
 
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
+                      const Expanded(
                           child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
@@ -121,10 +123,10 @@ class _PaymentScreen extends State<PaymentScreen> {
                         ),
                       )),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Subtotal Value",
-                          style: TextStyle(
+                          subtotal.toString(),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
                           ),
@@ -132,14 +134,14 @@ class _PaymentScreen extends State<PaymentScreen> {
                       ),
                     ],
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                           child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "IVA",
+                          "Tax",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -149,7 +151,7 @@ class _PaymentScreen extends State<PaymentScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "IVA Value",
+                          "12%",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -158,14 +160,14 @@ class _PaymentScreen extends State<PaymentScreen> {
                       ),
                     ],
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                           child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "Servicio + Envio",
+                          "Service + Delivery",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -175,7 +177,7 @@ class _PaymentScreen extends State<PaymentScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "Servicio + Envio Value",
+                          "3.00",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -187,7 +189,7 @@ class _PaymentScreen extends State<PaymentScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
+                      const Expanded(
                           child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
@@ -200,10 +202,10 @@ class _PaymentScreen extends State<PaymentScreen> {
                         ),
                       )),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "TotalEnvio Value",
-                          style: TextStyle(
+                          calculateTotal(subtotal).toString(),
+                          style: const TextStyle(
                             color: Colors.orange,
                             fontSize: 14,
                             fontWeight: FontWeight.normal,
@@ -218,7 +220,7 @@ class _PaymentScreen extends State<PaymentScreen> {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            "Método de Pago",
+            "Payment method",
             style: TextStyle(
               color: GlobalVariables.greenHorta,
               fontSize: 20,
@@ -245,7 +247,7 @@ class _PaymentScreen extends State<PaymentScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "Beneficiario: Marmandos Gorotiza",
+                      "Account owner: Marmandos Gorotiza",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -255,7 +257,7 @@ class _PaymentScreen extends State<PaymentScreen> {
                       icon: const Icon(Icons.copy, color: Colors.white),
                       onPressed: () {
                         Clipboard.setData(
-                            const ClipboardData(text: "Marmandos Gorotiza"));
+                            const ClipboardData(text: "Jonathan Gorotiza"));
                         // Optionally, provide user feedback that the text has been copied.
                       },
                     ),
@@ -265,7 +267,7 @@ class _PaymentScreen extends State<PaymentScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "Banco: Banco Bolivariano",
+                      "Bank: Banco Bolivariano",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -285,7 +287,7 @@ class _PaymentScreen extends State<PaymentScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "Número de cuenta: 0019614578",
+                      "Account number: 0019614578",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -305,7 +307,7 @@ class _PaymentScreen extends State<PaymentScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "cédula: 0987654321",
+                      "National ID: 0987654321",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -330,7 +332,7 @@ class _PaymentScreen extends State<PaymentScreen> {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            "Datos de Facturación",
+            "Billing Information",
             style: TextStyle(
               color: GlobalVariables.greenHorta,
               fontSize: 20,
@@ -348,60 +350,46 @@ class _PaymentScreen extends State<PaymentScreen> {
                 const BorderSide(color: Colors.grey, width: 0.5), // Grey border
             borderRadius: BorderRadius.circular(8.0),
           ),
-          child: Form(
+          child: FormBuilder(
             key: _formKey,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
               child: Column(
                 children: [
-                  TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre',
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 14),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  NormalText(text: "Name"),
+                  FormBuilderTextField(
+                      style: const TextStyle(
+                          color: GlobalVariables.whitebackgound),
+                      name: 'name',
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(context),
+                        FormBuilderValidators.minLength(context, 3),
+                        FormBuilderValidators.match(context, "^[a-zA-Z]{1,8}\$",
+                            errorText: "Must be letters")
+                      ])),
                   const SizedBox(height: 8),
-                  TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      labelText: 'Cédula',
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 14),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  NormalText(text: "National ID"),
+                  FormBuilderTextField(
+                      style: const TextStyle(
+                          color: GlobalVariables.whitebackgound),
+                      name: 'nationalid',
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(context),
+                        FormBuilderValidators.maxLength(context, 10),
+                        FormBuilderValidators.minLength(context, 10),
+                        FormBuilderValidators.numeric(context)
+                      ])),
                   const SizedBox(height: 8),
-                  TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      labelText: 'Correo Electrónico',
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 14),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  NormalText(text: "Email"),
+                  FormBuilderTextField(
+                      style: const TextStyle(
+                          color: GlobalVariables.whitebackgound),
+                      name: 'email',
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(context),
+                        FormBuilderValidators.email(context)
+                      ])),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -441,46 +429,8 @@ class _PaymentScreen extends State<PaymentScreen> {
           leading: BackButton(
             color: GlobalVariables.secondaryColor,
             onPressed: () {
-              Navigator.pop(
-                  context); // This will take you back to the previous screen
+              Navigator.pop(context);
             },
-          ),
-          title: const Padding(
-            padding: EdgeInsets.all(8.0), // padding
-            child: Row(
-              // Row widget
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.place_outlined,
-                  color: GlobalVariables.secondaryColor,
-                  size: 40.0,
-                ),
-                SizedBox(
-                    width: 10.0), // Some space between the icon and the texts
-                Column(
-                  // Column for the texts
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Casa",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          fontFamily: "Lato"),
-                    ),
-                    Text(
-                      "Av. Francisco de Orellana 562",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          fontFamily: "Lato"),
-                    )
-                  ],
-                ),
-              ],
-            ),
           ),
           centerTitle: true,
         ),
@@ -492,7 +442,9 @@ class _PaymentScreen extends State<PaymentScreen> {
                 builder: (context, state) {
                   if (state is PaymentReadyState) {
                     return ListView(
-                      children: [_buildPaymentOrderDetail(state.newPay)],
+                      children: [
+                        _buildPaymentOrderDetail(state.subtotal, state.total)
+                      ],
                     );
                   }
                   // You can add other conditional returns based on different states if needed.
@@ -501,30 +453,28 @@ class _PaymentScreen extends State<PaymentScreen> {
                 },
               ),
             ),
-
-            // Expanded(
-            //   child: BlocBuilder<PaymentBloc, PaymentState>(
-            //     builder: (context, state) => ListView(
-            //       children: [_buildPaymentOrderDetail()],
-            //     ),
-            //   ),
-            // ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Implement your payment functionality here
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    GlobalVariables.secondaryColor,
-                  ),
-                ),
-                child: const Text("Pagar"),
-              ),
-            ),
-            const SizedBox(height: 10),
+            _confirmPayment(context)
           ],
+        ));
+  }
+
+  Widget _confirmPayment(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.saveAndValidate()) {
+              print("valir");
+            }
+            ;
+            // Implement your payment functionality here
+          },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+              GlobalVariables.secondaryColor,
+            ),
+          ),
+          child: const Text("Confirm purchase"),
         ));
   }
 }

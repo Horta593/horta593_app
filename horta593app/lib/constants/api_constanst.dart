@@ -26,4 +26,8 @@ class API {
 
   //[PATCH]
   static const String CHANGELOCATION_ENDPOINT = '/user/{id}/address';
+
+  //Order
+  //[POST]
+  static const String ORDER_ENDPOINT = '/order';
 }

@@ -106,13 +106,11 @@ class ProfileService {
           "longitude": position.longitude
         }));
 
-    print(response.statusCode);
     switch (response.statusCode) {
       case 200:
         final json = jsonDecode(response.body);
         final locationuser = LocationUser.fromJson(json['user']);
 
-        print(locationuser);
         return locationuser;
       case 400:
         final json = jsonDecode(response.body);
