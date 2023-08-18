@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horta593app/model/pay_model.dart';
 import 'package:horta593app/screens/payment/bloc/payment_event.dart';
+import 'package:horta593app/screens/tracking/bloc/tracking_bloc.dart';
+import 'package:horta593app/screens/tracking/tracking_screen.dart';
 import 'package:horta593app/widgets/text_normal.dart';
 import '../../widgets/text_title.dart';
 import 'bloc/payment_bloc.dart';
@@ -443,7 +445,8 @@ class _PaymentScreen extends State<PaymentScreen> {
                   if (state is PaymentReadyState) {
                     return ListView(
                       children: [
-                        _buildPaymentOrderDetail(state.subtotal, state.total)
+                        _buildPaymentOrderDetail(state.subtotal, state.total),
+                        _confirmPayment(context, state)
                       ],
                     );
                   }
@@ -453,21 +456,29 @@ class _PaymentScreen extends State<PaymentScreen> {
                 },
               ),
             ),
-            _confirmPayment(context)
           ],
         ));
   }
 
-  Widget _confirmPayment(BuildContext context) {
+  Widget _confirmPayment(BuildContext context, PaymentReadyState state) {
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.saveAndValidate()) {
-              print("valir");
+              //todo:
+              //enviar el id de la orden en el initial event, pasar el id del carrito del payment al tracking
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider<TrackingBloc>(
+                    create: (context) =>
+                        TrackingBloc()..add(TrackingInitialEvent()),
+                    child: TrackingScreen(),
+                  ),
+                ),
+              );
             }
-            ;
-            // Implement your payment functionality here
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
