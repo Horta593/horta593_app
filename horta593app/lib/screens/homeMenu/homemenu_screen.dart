@@ -98,15 +98,15 @@ class _MenuScreenState extends State<MenuScreen> {
                                   ),
                                 ),
                                 Padding(
-                                    padding: const EdgeInsets.only(top: 15),
+                                    padding: const EdgeInsets.only(top: 10),
                                     child: NormalText(
                                       sizeT: 18,
                                       text: "\$${product.price}",
                                     )),
                                 Padding(
-                                    padding: const EdgeInsets.only(top: 15),
+                                    padding: const EdgeInsets.only(top: 10),
                                     child: SizedBox(
-                                        height: 105,
+                                        height: 90,
                                         child: SingleChildScrollView(
                                             scrollDirection: Axis.vertical,
                                             child: NormalText(
@@ -114,7 +114,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                               trunc: false,
                                             )))),
                                 Padding(
-                                    padding: EdgeInsets.only(top: 15),
+                                    padding: EdgeInsets.only(top: 10),
                                     child: Container(
                                       width: AppLayout.getSize(context).width *
                                           0.9,
@@ -145,6 +145,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               print(currentItem);
                               BlocProvider.of<CartBloc>(context)
                                   .add(AddItemEvent(currentItem));
+                              Navigator.pop(context);
                             },
                             child: const Text('Add cart'),
                           )

@@ -18,17 +18,16 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreen extends State<PaymentScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    print("_pickImage");
 
+    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       _imageFile = image;
     });
-
     if (_imageFile != null) {
       Image.file(File(_imageFile!.path));
       // Simulate a successful upload

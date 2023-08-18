@@ -93,6 +93,8 @@ class ProfileService {
     User user_response = await getProfileInfo();
 
     String url = "${API.BASE_URL}${API.CHANGELOCATION_ENDPOINT}";
+    print("ID");
+    print(user_response.id);
     url = url.replaceFirst('{id}', user_response.id);
     User user = await loadUser();
     String token = user.accessToken;
