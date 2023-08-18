@@ -32,27 +32,25 @@ class _PaymentScreen extends State<PaymentScreen> {
     print("_pickImage");
 
     XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _imageFile = image;
-    });
-    if (_imageFile != null) {
-      Image.file(File(_imageFile!.path));
-      // Simulate a successful upload
+    if (image != null) {
+      _formKey.currentState!.fields['image']!.didChange(image);
       Fluttertoast.showToast(
-          msg: "File uploaded successfully!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "File uploaded successfully!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     } else {
       Fluttertoast.showToast(
-          msg: "File upload failed!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "File upload failed!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 
@@ -62,6 +60,7 @@ class _PaymentScreen extends State<PaymentScreen> {
     double total = 0.0;
     double res = (subTotal * iva);
     total = subTotal + res + service;
+    print(total);
     return total;
   }
 
@@ -464,13 +463,14 @@ class _PaymentScreen extends State<PaymentScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           onPressed: () {
-            // if (_formKey.currentState!.saveAndValidate()) {
-            context
-                .read<TrackingBloc>()
-                .add(TrackingInitialEvent(state.idOrder));
+            if (_formKey.currentState!.saveAndValidate()) {
+              context.read<TrackingBloc>().add(TrackingInitialEvent(
+                  state.idOrder,
+                  _formKey.currentState!.value['name'],
+                  _formKey.currentState!.value['email']));
 
-            Navigator.pop(context);
-            // }
+              Navigator.pop(context);
+            }
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(

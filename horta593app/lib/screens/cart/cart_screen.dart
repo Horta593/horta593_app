@@ -199,7 +199,7 @@ class _CartScreen extends State<CartScreen> {
                         double subTotalValue =
                             calculateSubtTotal(state.shoppingCart);
                         double totalValue = calculateTotal(subTotalValue);
-
+                        print(totalValue);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

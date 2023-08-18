@@ -9,7 +9,10 @@ class TrackingEvent extends Equatable {
 
 class TrackingInitialEvent extends TrackingEvent {
   String orderID;
-  TrackingInitialEvent(this.orderID);
+  String name;
+  String nationalID;
+
+  TrackingInitialEvent(this.orderID, this.name, this.nationalID);
   @override
-  List<Object?> get props => [orderID];
+  List<Object?> get props => [orderID, name, nationalID];
 }
