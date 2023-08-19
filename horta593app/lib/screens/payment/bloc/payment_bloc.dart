@@ -11,9 +11,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       final id_ = await PaymentService.generateOrder(event.shoppingCart);
       emit(PaymentReadyState(
           idOrder: id_, subtotal: event.subTotal, total: event.total));
-      print("PaymentReadyState");
+      print(id_);
       // emit(PaymentLoadingState(newPay: event.pay));
-
       // emit(PaymentReadyState(newPay: event.pay));
     });
   }

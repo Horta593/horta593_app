@@ -31,6 +31,12 @@ class API {
   //[POST]
   static const String ORDER_ENDPOINT = '/order';
 
+  //[GET]
+  static const String ORDERUSER_ENDPOINT = '/order/{id}/orders/all';
+
   //[POST]
   static const String PAYMENT_ENDPOINT = '/payment';
+
+  //[GET]
+  static const String ORDER_STATUS_ENDPOINT = '/order/{orderId}/status';
 }

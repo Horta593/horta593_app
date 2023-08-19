@@ -34,7 +34,6 @@ class ProfileService {
     String url = "${API.BASE_URL}${API.ME_ENDPOINT}";
     User user = await loadUser();
     String token = user.accessToken;
-
     final response = await http.get(Uri.parse(url),
         headers: HelperService.buildHeaders(accessToken: token));
 
@@ -57,26 +56,25 @@ class ProfileService {
     }
   }
 
+  static Future<String> getIDUser() async {
+    User user_response = await getProfileInfo();
+
+    return user_response.id;
+  }
+
   static Future<LocationUser> getMeLocation() async {
     String url = "${API.BASE_URL}${API.MELOCATION_ENDPOINT}";
     User user = await loadUser();
     String token = user.accessToken;
 
-    print(url);
-
     final response = await http.get(
       Uri.parse(url),
       headers: HelperService.buildHeaders(accessToken: token),
     );
-    print(response.statusCode);
-    print(response.body);
     switch (response.statusCode) {
       case 200:
         final json = jsonDecode(response.body);
         final locationuser = LocationUser.fromJson(json);
-        print(locationuser.latitude);
-        print(locationuser.longitude);
-        print(locationuser.address);
         return locationuser;
       case 400:
         final json = jsonDecode(response.body);

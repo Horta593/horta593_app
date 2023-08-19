@@ -9,15 +9,6 @@ abstract class PaymentState extends Equatable {
 
 class PaymentInitialState extends PaymentState {}
 
-class PaymentLoadingState extends PaymentState {
-  // final Pay newPay;
-
-  // const PaymentLoadingState({required this.newPay});
-
-  // @override
-  // List<Object?> get props => [newPay];
-}
-
 class PaymentReadyState extends PaymentState {
   // final Pay newPay;
   final String idOrder;

@@ -3,7 +3,6 @@ part of 'tracking_bloc.dart';
 @immutable
 class TrackingEvent extends Equatable {
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 
@@ -18,3 +17,5 @@ class TrackingInitialEvent extends TrackingEvent {
 }
 
 class TrackingPaymentlEvent extends TrackingEvent {}
+
+class RequestOrderStatusEvent extends TrackingEvent {}
