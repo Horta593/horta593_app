@@ -38,8 +38,8 @@ class ProfileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             _miDireccion(context, state),
-                            _misOrdenes(context),
-                            _ayuda(context),
+                            // _misOrdenes(context),
+                            // _ayuda(context),
                             Padding(
                               padding: const EdgeInsets.only(top: 20),
                               child: CustomButton(

@@ -77,7 +77,6 @@ class PaymentService {
       case 200:
         final result = jsonDecode(response.body);
         final Map<String, dynamic> idOrder = result.last;
-        print(idOrder['id']);
         return idOrder['id'];
       case 400:
         final json = jsonDecode(response.body);
