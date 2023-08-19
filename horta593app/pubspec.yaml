@@ -54,6 +54,8 @@ dependencies:
   fluentui_system_icons: ^1.1.208
   image_picker: ^1.0.2
   fluttertoast: ^8.0.7
+  mockito: ^5.4.2
+  provider: ^6.0.5
 
 dependency_overrides:
   intl: ^0.18.0
