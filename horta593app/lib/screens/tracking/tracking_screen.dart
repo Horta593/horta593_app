@@ -20,12 +20,9 @@ class _TrackingScreenState extends State<TrackingScreen> {
     OrderStatus("Order Completed"),
   ];
   @override
-  void initState() {}
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TrackingBloc, TrackingState>(builder: (context, state) {
-      print(state);
       if (state is TrackingSuccessPayment) {
         return const Center(
             child: Text(

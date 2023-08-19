@@ -4,6 +4,9 @@ import 'package:horta593app/screens/profile/bloc/profile_bloc.dart';
 import 'package:horta593app/widgets/custom_button.dart';
 
 import '../../constants/global_variables.dart';
+import '../../constants/utils/app_layout.dart';
+import '../../widgets/text_normal.dart';
+import '../../widgets/text_title.dart';
 import '../login/login_screen.dart';
 import '../map/googlemap_screen.dart';
 
@@ -38,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             _miDireccion(context, state),
-                            // _misOrdenes(context),
+                            _misOrdenes(context),
                             // _ayuda(context),
                             Padding(
                               padding: const EdgeInsets.only(top: 20),
@@ -124,6 +127,82 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: FractionallySizedBox(
+                heightFactor: 0.8,
+                child: Container(
+                    decoration: const BoxDecoration(
+                      color: GlobalVariables.primarybackground,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 15, left: 15, right: 15, bottom: 30),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: TitleCustom(
+                                    title: "product.name",
+                                    sizeT: 18,
+                                  ),
+                                ),
+                                Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: NormalText(
+                                      sizeT: 18,
+                                      text: "\$product.price",
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: SizedBox(
+                                        height: 90,
+                                        child: SingleChildScrollView(
+                                            scrollDirection: Axis.vertical,
+                                            child: NormalText(
+                                              text: "product.description",
+                                              trunc: false,
+                                            )))),
+                                Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Container(
+                                      width: AppLayout.getSize(context).width *
+                                          0.9,
+                                      height: 0.5,
+                                      color: GlobalVariables.greyHorta,
+                                    )),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ))));
+      },
+    );
+  }
+
   Widget _misOrdenes(BuildContext context) {
     return Row(
       children: [
@@ -134,8 +213,17 @@ class ProfileScreen extends StatelessWidget {
         ),
         Expanded(
           child: TextButton(
-            onPressed: () => {},
-            style: TextButton.styleFrom(
+            onPressed: () {
+              context.read<ProfileBloc>().add(OrdersRequestEvent());
+              BlocListener<ProfileBloc, ProfileState>(
+                  listener: (context, state) {
+                if (state is OrdersUserSuccessfullState) {
+                  _showBottomSheet(context);
+                }
+              });
+            },
+            style: // Your style goes here
+                TextButton.styleFrom(
               alignment: Alignment.centerLeft,
             ),
             child: const Align(

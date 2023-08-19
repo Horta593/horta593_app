@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:horta593app/model/cart_item_model.dart';
-import 'package:horta593app/model/pay_model.dart';
 
 // Define your events
 abstract class PaymentEvent extends Equatable {
@@ -12,6 +11,7 @@ abstract class PaymentEvent extends Equatable {
 
 class PaymentInitialEvent extends PaymentEvent {}
 
+// ignore: must_be_immutable
 class InitializePaymentEvent extends PaymentEvent {
   final List<CartItem> shoppingCart;
   double subTotal;

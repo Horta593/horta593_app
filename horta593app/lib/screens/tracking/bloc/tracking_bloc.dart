@@ -12,7 +12,6 @@ part 'tracking_event.dart';
 part 'tracking_state.dart';
 
 class TrackingBloc extends Bloc<TrackingEvent, TrackingState> {
-  // Esta línea inicia el polling cada 10 segundos.
   StreamSubscription? _pollingSubscription;
 
   TrackingBloc() : super(TrackingInitialState()) {
@@ -22,8 +21,6 @@ class TrackingBloc extends Bloc<TrackingEvent, TrackingState> {
     on<TrackingInitialEvent>((event, emit) async {
       emit(TrackingInitialState());
       try {
-        final String idPayment = await PaymentService.confirmPayment(
-            event.orderID, event.name, event.nationalID);
         emit(TrackingSuccessPayment(idOrder: event.orderID));
       } on FormGeneralException catch (e) {
         emit(TrackingErrorlState(e));
@@ -37,24 +34,17 @@ class TrackingBloc extends Bloc<TrackingEvent, TrackingState> {
     });
 
     on<RequestOrderStatusEvent>((event, emit) async {
-      print("RequestOrderStatusEvent");
-      print(state);
-
       try {
         if (state is TrackingSuccessPayment ||
             state is OrderSentState ||
             state is OrderProcessState ||
             state is OrderReadyState) {
           final String idUser = await ProfileService.getIDUser();
-          print(idUser);
           final String orderID = await PaymentService.getOrderbyUser(idUser);
-          print(orderID);
 
           final String orderStatus =
               await PaymentService.getOrderStatus(orderID);
 
-          print("pooling");
-          print(orderStatus);
           switch (orderStatus) {
             case 'SENT':
               emit(OrderSentState());

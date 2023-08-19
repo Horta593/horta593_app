@@ -16,6 +16,14 @@ class ProfileSuccessfullState extends ProfileState {
   List<Object> get props => [user];
 }
 
+// ignore: must_be_immutable
+class OrdersUserSuccessfullState extends ProfileState {
+  Map<String, dynamic> userOrders;
+  OrdersUserSuccessfullState(this.userOrders);
+  @override
+  List<Object> get props => [userOrders];
+}
+
 class ProfileErrorState extends ProfileState {
   final Exception exception;
 

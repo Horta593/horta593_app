@@ -8,3 +8,8 @@ class ProfileRequestEvent extends ProfileEvent {
   @override
   List<Object?> get props => [];
 }
+
+class OrdersRequestEvent extends ProfileEvent {
+  @override
+  List<Object?> get props => [];
+}

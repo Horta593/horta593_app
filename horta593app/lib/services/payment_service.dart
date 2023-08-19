@@ -1,4 +1,3 @@
-import 'package:horta593app/model/payment_model.dart';
 import 'package:horta593app/services/helper_service.dart';
 import 'package:horta593app/services/profile_service.dart';
 import 'package:horta593app/services/secure_storage_service.dart';
@@ -7,7 +6,6 @@ import '../constants/api_constanst.dart';
 import '../exceptions/form_exceptions.dart';
 import '../exceptions/secure_storage_exceptions.dart';
 import '../model/cart_item_model.dart';
-import '../model/product_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -78,6 +76,30 @@ class PaymentService {
         final result = jsonDecode(response.body);
         final Map<String, dynamic> idOrder = result.last;
         return idOrder['id'];
+      case 400:
+        final json = jsonDecode(response.body);
+        throw handleFormErrors(json);
+      case 300:
+      case 500:
+      default:
+        throw FormGeneralException(message: 'Error contacting the server!');
+    }
+  }
+
+  static Future<Map<String, dynamic>> getAllOrdersbyUser(String userID) async {
+    String url = "${API.BASE_URL}${API.ORDERUSER_ENDPOINT}";
+    url = url.replaceFirst('{id}', userID);
+    User user = await loadUser();
+    String token = user.accessToken;
+
+    final response = await http.get(Uri.parse(url),
+        headers: HelperService.buildHeaders(accessToken: token));
+
+    switch (response.statusCode) {
+      case 200:
+        final result = jsonDecode(response.body);
+        final Map<String, dynamic> ordersUser = result;
+        return ordersUser;
       case 400:
         final json = jsonDecode(response.body);
         throw handleFormErrors(json);

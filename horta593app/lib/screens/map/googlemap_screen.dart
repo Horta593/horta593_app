@@ -24,7 +24,7 @@ class MapSample extends StatefulWidget {
 class MapSampleState extends State<MapSample> {
   late GoogleMapController _controller;
   final LatLng _center = const LatLng(37.42976302006848, -122.0865985751152);
-  Set<Marker> _markers = Set<Marker>();
+  Set<Marker> _markers = <Marker>{};
   String nameValue = "HOME";
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
@@ -141,15 +141,7 @@ class MapSampleState extends State<MapSample> {
                 initialCameraPosition:
                     CameraPosition(target: LatLng(lat, long), zoom: 11.0)),
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () async {
-                // setState(() {
-                //   _center = LatLng(,);
-                // });
-                // Position position = await _getCurrentLocation();
-                // bool confirmChange =
-                //     await _onBackButtonPressed(context, "", "");
-                // _updateLocation(context, confirmChange, position);
-              },
+              onPressed: () async {},
               label: const Text("Your Location"),
               icon: const Icon(Icons.location_history),
             )));

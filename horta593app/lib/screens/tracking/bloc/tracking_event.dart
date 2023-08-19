@@ -6,6 +6,7 @@ class TrackingEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// ignore: must_be_immutable
 class TrackingInitialEvent extends TrackingEvent {
   String orderID;
   String name;

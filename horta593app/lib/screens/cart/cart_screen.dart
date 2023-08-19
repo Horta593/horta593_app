@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:horta593app/model/pay_model.dart';
 import 'package:horta593app/screens/payment/bloc/payment_bloc.dart';
 import 'package:horta593app/screens/payment/bloc/payment_event.dart';
 import '../../model/cart_item_model.dart';
 import '../payment/payment_screen.dart';
-import '../tracking/bloc/tracking_bloc.dart';
 import 'bloc/cart_bloc.dart';
 import '../../constants/global_variables.dart';
-import '../../model/product_model.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
